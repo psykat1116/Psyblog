@@ -2,6 +2,12 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Run Project
+
+- To run the project go to the root directory and in the terminal `npm install` then it will install all the necessary packages and then run the command `npm start`
+
+- Again open another terminal and go to the backend folder by typing `cd ./backend/` then also there run `npm install` and then run the command `npm start`
+
 ## Available Scripts
 
 In the project directory, you can run:

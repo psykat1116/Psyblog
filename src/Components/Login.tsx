@@ -1,9 +1,15 @@
-import React, { useState,useContext } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import AuthContext,{AuthContextType,LoginUser} from "../Context/AuthContext";
+import AuthContext, {
+  AuthContextType,
+  LoginUser,
+} from "../Context/AuthContext";
+import {BiLogIn} from "react-icons/bi";
 
 const Login = () => {
-  const {login} = useContext(AuthContext) as AuthContextType;
+  document.title = "Psyblog | Login";
+
+  const { login } = useContext(AuthContext) as AuthContextType;
   const Navigate = useNavigate();
   const [user, setUser] = useState<LoginUser>({
     email: "",
@@ -21,20 +27,20 @@ const Login = () => {
   async function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
     try {
-      await login(user);
-      Navigate('/');
+      login(user);
+      Navigate("/");
     } catch (error: any) {
       setError(error.response.data.message);
       setTimeout(() => {
         setError("");
-      },2000)
+      }, 2000);
     }
   }
 
   return (
     <div className="login-box">
       <div className="login">
-        <h1>Login</h1>
+        <h1>Log in to your account</h1>
         <form>
           <div className="email-box">
             <label htmlFor="email">Email</label>
@@ -60,10 +66,12 @@ const Login = () => {
         {error && <p>**{error}</p>}
         <small>
           Don't Have An Account Yet? <Link to="/registration">Sign Up</Link>{" "}
-          Here
         </small>
-        <button type="submit" onClick={handleClick}>Login</button>
+        <button type="submit" onClick={handleClick}>
+          Login{" "}<BiLogIn className="icon"/>
+        </button>
       </div>
+      <div className="bg-img bg-login"></div>
     </div>
   );
 };

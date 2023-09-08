@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
 import BlogList from "./BlogList";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
@@ -26,6 +28,8 @@ const Home = () => {
   }, [location]);
 
   return (
+    <>
+    <Navbar/>
     <div className="home">
       <div className="post">
         {posts.map((post: Post) => {
@@ -33,6 +37,8 @@ const Home = () => {
         })}
       </div>
     </div>
+    <Footer/>
+    </>
   );
 };
 

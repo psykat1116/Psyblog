@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import ReactQuill from "react-quill";
+import Footer from "./Footer";
 import "react-quill/dist/quill.snow.css";
 import placeholder from "../image/image-placeholder.jpg";
 import { FiUploadCloud } from "react-icons/fi";
@@ -8,6 +9,7 @@ import { GrUpdate } from "react-icons/gr";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
+import Navbar from "./Navbar";
 
 const WriteBlog = () => {
   const Navigate = useNavigate();
@@ -86,6 +88,8 @@ const WriteBlog = () => {
   };
 
   return (
+    <>
+    <Navbar/>
     <div className="write">
       <div className="writebox">
         <div className="left">
@@ -164,6 +168,8 @@ const WriteBlog = () => {
         </div>
       </div>
     </div>
+    <Footer/>
+    </>
   );
 };
 

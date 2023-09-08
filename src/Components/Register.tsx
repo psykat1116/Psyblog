@@ -10,6 +10,8 @@ function validateEmail(email: string) {
 }
 
 const Register = () => {
+  document.title = "Psyblog | Register";
+
   const Navigate = useNavigate();
   const [user, setUser] = useState<SignUpUser>({
     name: "",
@@ -56,9 +58,8 @@ const Register = () => {
 
   return (
     <div className="signup-box">
-      {
         <div className="signup">
-          <h1>Sign Up</h1>
+          <h1>Create Your Account</h1>
           <form>
             <div className="name-box">
               <label htmlFor="name">Username</label>
@@ -106,13 +107,13 @@ const Register = () => {
           </form>
           {error && <p style={{ color: "red" }}>**{error}</p>}
           <small>
-            Already Have An Account? <Link to="/login">Login</Link> Here
+            Already Have An Account? <Link to="/login">Login</Link>
           </small>
           <button type="submit" onClick={handleSubmit}>
             Sign Up
           </button>
         </div>
-      }
+        <div className="bg-img bg-signup"></div>
     </div>
   );
 };

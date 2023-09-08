@@ -151,27 +151,21 @@
     }
     .login-box,
     .signup-box {
-      background-color: whitesmoke;
       position: relative;
-      min-height: 100vh;
+      height: 100vh;
       display: flex;
-      justify-content: center;
-      align-items: center;
       .login,
       .signup {
-        width: 350px;
+        width: 30%;
         position: relative;
         padding: 10px;
         color: #232323;
         display: flex;
         flex-direction: column;
-        background-color: #e4d1d1;
-        border-radius: 7px;
-        box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.2);
-        border: 1px solid #232323;
+        align-items: flex-start;
         h1 {
           width: 100%;
-          text-align: center;
+          font-family: "Lora", sans-serif;
         }
         form {
           position: relative;
@@ -209,25 +203,60 @@
         small {
           position: relative;
           width: 100%;
-          text-align: center;
           font-weight: bold;
-          margin: 5px 0;
-          font-size: 14px;
+          margin: 1.2rem 0;
+          font-size: 16px;
         }
         button {
           padding: 10px 30px;
-          background-color: blue;
+          background: #49133d;
           border: none;
           color: #fff;
+          border-radius: 5px;
+          text-transform: uppercase;
           font-size: 16px;
-          font-weight: bold;
-          letter-spacing: 0.6px;
-          width: 100%;
+          letter-spacing: 0.7px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 40%;
+          .icon {
+            margin-left: 5px;
+            font-size: 20px;
+          }
         }
+      }
+      .bg-img {
+        width: 70%;
+      }
+      .bg-login {
+        background: linear-gradient(
+            to right,
+            rgba(0, 0, 0, 0.8),
+            rgba(0, 0, 0, 0.5)
+          ),
+          url(./image/Login_bg.jpg);
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
+      .bg-signup {
+        background: linear-gradient(
+            to right,
+            rgba(0, 0, 0, 0.8),
+            rgba(0, 0, 0, 0.5)
+          ),
+          url(./image/Signup_bg.jpg);
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
       }
       ::placeholder {
         font-family: "Poppins", sans-serif;
       }
+    }
+    .signup-box {
+      flex-direction: row-reverse;
     }
     #footer {
       position: relative;

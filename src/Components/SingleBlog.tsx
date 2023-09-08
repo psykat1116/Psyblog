@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
 import { BiEditAlt } from "react-icons/bi";
 import { AiOutlineDelete } from "react-icons/ai";
 import SuggestBlog from "./SuggestBlog";
@@ -57,6 +59,8 @@ const SingleBlog = () => {
   }, [blogID]);
 
   return (
+    <>
+    <Navbar/>
     <div className="sblog">
       <div className="sblog-main">
         <div className="main-blog">
@@ -104,6 +108,8 @@ const SingleBlog = () => {
         </div>
       </div>
     </div>
+    <Footer/>
+    </>
   );
 };
 

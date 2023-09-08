@@ -1,24 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./Style.scss";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./Components/Home";
+import Register from "./Components/Register";
+import Login from "./Components/Login";
+import WriteBlog from "./Components/WriteBlog";
+import Navbar from "./Components/Navbar";
+import Footer from "./Components/Footer";
+import Profile from "./Components/Profile";
+import Error from "./Components/Error";
+import SingleBlog from "./Components/SingleBlog";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <div className="container">
+        <Router>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/registration" element={<Register />} />
+            <Route path="/blogs/:id" element={<SingleBlog />} />
+            <Route path="/profile/:username" element={<Profile />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/write" element={<WriteBlog />} />
+            <Route path="*" element={<Error />} />
+          </Routes>
+          <Footer />
+        </Router>
+      </div>
     </div>
   );
 }

@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import ReactQuill from "react-quill";
+import React, { useState, useRef } from "react";
+import JoditEditor from "jodit-react";
 import Footer from "./Footer";
-import "react-quill/dist/quill.snow.css";
 import placeholder from "../image/image-placeholder.jpg";
 import { FiUploadCloud } from "react-icons/fi";
 import { LuSend } from "react-icons/lu";
@@ -13,8 +12,12 @@ import Navbar from "./Navbar";
 
 const WriteBlog = () => {
   const Navigate = useNavigate();
+  const editor = useRef(null);
   const state = useLocation().state;
-  const [value, setValue] = useState<string>(state?.description || "");
+  const config = {
+    height: "500px",
+  };
+  const [content, setContent] = useState<string>(state?.description || "");
   const [title, setTitle] = useState<string>(state?.title || "");
   const [image, setImage] = useState<string>(
     state ? `../uploads/${state.image}` : placeholder.toString()
@@ -31,7 +34,7 @@ const WriteBlog = () => {
     try {
       await axios.post("/posts", {
         title: title,
-        description: value,
+        description: content,
         catagory: catagory,
         image: file ? imageURL : placeholder.toString(),
         date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
@@ -76,7 +79,7 @@ const WriteBlog = () => {
     try {
       await axios.put(`/posts/${state.id}`, {
         title: title,
-        description: value,
+        description: content,
         catagory: catagory,
         lastupdate: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
         visibility: visibility,
@@ -89,86 +92,88 @@ const WriteBlog = () => {
 
   return (
     <>
-    <Navbar/>
-    <div className="write">
-      <div className="writebox">
-        <div className="left">
-          <input
-            type="text"
-            placeholder="Enter Your Blog Title"
-            className="writeInput"
-            autoFocus={true}
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-          <div className="editbox">
-            <ReactQuill
-              theme="snow"
-              value={value}
-              onChange={setValue}
-              id="editor"
-            />
-          </div>
-        </div>
-        <div className="right">
-          <div className="post-status">
-            <img src={image} alt="placeholder" />
+      <Navbar />
+      <div className="write">
+        <div className="writebox">
+          <div className="left">
             <input
-              type="file"
-              name="main-image"
-              id="main-image"
-              hidden
-              onChange={updateFile}
+              type="text"
+              placeholder="Enter Your Blog Title"
+              className="writeInput"
+              autoFocus={true}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
             />
-            <div className="actions">
-              <button onClick={openFile}>
-                Upload Image <FiUploadCloud className="icon" />
-              </button>
-              <button>Save as draft</button>
-              {state ? (
-                <button onClick={handleUpdate}>
-                  Update <GrUpdate className="icon" />
-                </button>
-              ) : (
-                <button onClick={handleSubmit}>
-                  Publish <LuSend className="icon" />
-                </button>
-              )}
+            <div className="editbox">
+              <JoditEditor
+                ref={editor}
+                value={content}
+                config={config}
+                onChange={(e) => {}}
+              />
             </div>
-            <div className="type">
-              <label htmlFor="vis">Visibility</label>
-              <select
-                id="vis"
-                defaultValue="public"
-                onChange={(e) => setVisibility(e.target.value)}
-              >
-                <option value="public">Public</option>
-                <option value="public">Private</option>
-              </select>
-            </div>
-            <div className="cat">
-              <label htmlFor="cata">Category</label>
-              <select
-                id="cata"
-                defaultValue="art"
-                onChange={(e) => {
-                  setCatagory(e.target.value);
-                }}
-              >
-                <option value="art">Art</option>
-                <option value="science">Science</option>
-                <option value="technology">Technology</option>
-                <option value="cinema">Cinema</option>
-                <option value="design">Design</option>
-                <option value="food">Food</option>
-                <option value="travel">Travel</option>
-              </select>
+          </div>
+          <div className="right">
+            <div className="post-status">
+              <img src={image} alt="placeholder" />
+              <input
+                type="file"
+                name="main-image"
+                id="main-image"
+                hidden
+                onChange={updateFile}
+              />
+              <div className="opt-group">
+                <div className="actions">
+                  <button onClick={openFile}>
+                    Upload Image <FiUploadCloud className="icon" />
+                  </button>
+                  <button>Save as draft</button>
+                  {state ? (
+                    <button onClick={handleUpdate}>
+                      Update <GrUpdate className="icon" />
+                    </button>
+                  ) : (
+                    <button onClick={handleSubmit}>
+                      Publish <LuSend className="icon" />
+                    </button>
+                  )}
+                </div>
+                <div className="type">
+                  <label htmlFor="vis">Visibility</label>
+                  <select
+                    id="vis"
+                    defaultValue="public"
+                    onChange={(e) => setVisibility(e.target.value)}
+                  >
+                    <option value="public">Public</option>
+                    <option value="public">Private</option>
+                  </select>
+                </div>
+                <div className="cat">
+                  <label htmlFor="cata">Category</label>
+                  <select
+                    id="cata"
+                    defaultValue="art"
+                    onChange={(e) => {
+                      setCatagory(e.target.value);
+                    }}
+                  >
+                    <option value="art">Art</option>
+                    <option value="science">Science</option>
+                    <option value="technology">Technology</option>
+                    <option value="cinema">Cinema</option>
+                    <option value="design">Design</option>
+                    <option value="food">Food</option>
+                    <option value="travel">Travel</option>
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <Footer/>
+      <Footer />
     </>
   );
 };

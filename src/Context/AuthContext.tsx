@@ -19,9 +19,18 @@ export type LoginUser = {
   password: string;
 };
 
+export type currentUser = {
+  id: number;
+  name: string;
+  email: string;
+  image: string | null;
+}
+
 export type AuthContextType = {
-  currentuser: string;
-  setCurrentUser: (currentuser: string) => void;
+  currentuser: currentUser;
+  isLogin: boolean;
+  setLogin: (isLogin: boolean) => void;
+  setCurrentUser: (currentuser: currentUser) => void;
   login: (user:LoginUser) => void;
   logout: () => void;
 };

@@ -1,10 +1,20 @@
-import React,{ useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import AuthContext from "./AuthContext";
+import AuthContext, { currentUser } from "./AuthContext";
 
 const AuthState = ({ children }: { children: React.ReactNode }) => {
-  const [currentuser, setCurrentUser] = useState<string>(
-    JSON.parse(localStorage.getItem("currentuser") || "")
+  const [isLogin, setLogin] = useState<boolean>(
+    localStorage.getItem("currentuser") !== null ? true : false
+  );
+  const [currentuser, setCurrentUser] = useState<currentUser>(
+    localStorage.getItem("currentuser") !== null
+      ? JSON.parse(localStorage.getItem("currentuser") as string)
+      : {
+          id: -1,
+          name: "",
+          email: "",
+          image: "",
+        }
   );
 
   const login = async ({
@@ -16,22 +26,26 @@ const AuthState = ({ children }: { children: React.ReactNode }) => {
   }) => {
     const res = await axios.post("/auth/login", { email, password });
     const data = await res.data;
+    localStorage.setItem("currentuser", JSON.stringify(data));
     setCurrentUser(data);
+    setLogin(true);
   };
 
   const logout = async () => {
     await axios.post("/auth/logout");
-    setCurrentUser("");
-    
+    localStorage.removeItem("currentuser");
+    setCurrentUser({
+      id: -1,
+      name: "",
+      email: "",
+      image: "",
+    });
+    setLogin(false);
   };
-
-  useEffect(() => {
-    localStorage.setItem("currentuser", JSON.stringify(currentuser));
-  }, [currentuser]);
 
   return (
     <AuthContext.Provider
-      value={{ currentuser, setCurrentUser, login, logout }}
+      value={{ currentuser, setCurrentUser, login, logout, isLogin, setLogin }}
     >
       {children}
     </AuthContext.Provider>

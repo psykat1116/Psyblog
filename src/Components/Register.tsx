@@ -47,7 +47,7 @@ const Register = () => {
         email: "",
         password: "",
       });
-      Navigate("/");
+      Navigate("/login");
     } catch (error: any) {
       setError(error.response.data.message);
       setTimeout(() => {

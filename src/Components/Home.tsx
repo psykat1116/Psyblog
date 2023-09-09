@@ -8,7 +8,7 @@ import { Post } from "../Context/AuthContext";
 
 export const getText = (html: string) => {
   const doc = new DOMParser().parseFromString(html, "text/html");
-  return doc.body.textContent || "";
+  return doc.body.textContent as string;
 };
 
 const Home = () => {

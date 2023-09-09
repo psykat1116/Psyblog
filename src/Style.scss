@@ -21,10 +21,23 @@
       .nav-links {
         position: relative;
         display: flex;
-        width: 70%;
         justify-content: center;
         align-items: center;
         letter-spacing: 0.6px;
+        select{
+          font-family: "Poppins", sans-serif;
+          padding: 10px;
+          width: 250px;
+          background: transparent;
+          font-size: 16px;
+          text-transform: capitalize;
+          border-radius: 5px;
+          border: 1px solid #232323;
+          margin-right: 10px;
+          option{
+           color: #232323;
+          }
+        }
         hr {
           height: 35px;
           width: 2px;
@@ -44,37 +57,6 @@
           justify-content: space-between;
           align-items: center;
           font-size: 16px;
-        }
-        a:not(:last-child, #logins, #signups) {
-          text-transform: uppercase;
-        }
-        a:not(:last-child, #logins, #signups)::before {
-          position: absolute;
-          content: "";
-          bottom: 0px;
-          left: -100%;
-          height: 2px;
-          width: 100%;
-          background-color: #232323;
-          transition: all 0.3s ease-in-out;
-        }
-        a:not(:last-child, #logins, #signups)::after {
-          position: absolute;
-          content: "";
-          top: 0;
-          right: -100%;
-          height: 2px;
-          width: 100%;
-          background-color: #232323;
-          transition: all 0.3s ease-in-out;
-        }
-        a:not(:last-child, #logins, #signups).active::before,
-        a:not(:last-child, #logins, #signups):hover::before {
-          left: 0;
-        }
-        a:not(:last-child, #logins, #signups).active::after,
-        a:not(:last-child, #logins, #signups):hover::after {
-          right: 0;
         }
         .icon {
           margin-left: 5px;
@@ -119,10 +101,6 @@
         #logins:hover,
         #signups:hover {
           color: #fff;
-        }
-        #logout:hover .icon-log,
-        #logins:hover .icon-log {
-          margin-left: 8px;
         }
         #write {
           position: relative;
@@ -339,25 +317,33 @@
       margin: 10px 0;
       padding: 0px 8rem;
       .post {
+        width: 100%;
         position: relative;
         display: flex;
         flex-direction: column;
         align-items: flex-start;
+        padding: 2rem 0;
         #single-tab-blog {
           position: relative;
           padding: 20px;
-          width: 100%;
+          min-width: 96.5%;
           display: flex;
           justify-content: space-around;
           align-items: center;
-          margin: 4px 0;
+          margin: 1rem 0;
           background-color: whitesmoke;
           .details {
-            width: 45%;
+            position: relative;
+            min-height: 300px;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            justify-content: center;
+            justify-content: flex-start;
+            width: 50%;
+            h1{
+              line-height: 40px;
+              font-family: "Oswald", sans-serif;
+            }
             button {
               padding: 10px;
               text-transform: uppercase;

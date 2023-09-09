@@ -14,7 +14,7 @@ export const getAllPosts = ((req, res) => {
 
 export const getSinglePost = ((req, res) => {
     const id = req.params.id;
-    const q = "SELECT p.id,`name`,`title`,`description`,u.image as userImg, p.image as image, date FROM users u JOIN posts p ON u.id = p.uid WHERE p.id = ?";
+    const q = "SELECT p.id,`uid`,`lastupdate`,`visibility`,`name`,`title`,`description`,u.image as userImg, p.image as image, date FROM users u JOIN posts p ON u.id = p.uid WHERE p.id = ?";
     db.query(q, [id], (err, result) => {
         if (err) {
             return res.status(500).send(err);

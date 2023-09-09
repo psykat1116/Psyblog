@@ -16,13 +16,13 @@ const SuggestBlog = ({ catagory }: { catagory: string }) => {
     const fetchBlogs = async () => {
       try {
         const res = await axios.get(`/posts/?catagory=${catagory}`);
-        setBlogs(res.data);
+        setBlogs(res.data.splice(0, 4));
       } catch (error: any) {
         console.log(error.message);
       }
     };
     fetchBlogs();
-  },[]);
+  },[catagory]);
 
   return (
     <div className="suggest-posts">

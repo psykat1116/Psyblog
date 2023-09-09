@@ -29,15 +29,19 @@ const Home = () => {
 
   return (
     <>
-    <Navbar/>
-    <div className="home">
-      <div className="post">
-        {posts.map((post: Post) => {
-          return <BlogList key={post.id} post={post} />;
-        })}
+      <Navbar />
+      <div className="home">
+        {posts.length > 0 ? (
+          <div className="post">
+            {posts.map((post: Post) => {
+              return <BlogList key={post.id} post={post} />;
+            })}
+          </div>
+        ) : (
+          <h1 className="no-post">No Post Found</h1>
+        )}
       </div>
-    </div>
-    <Footer/>
+      <Footer />
     </>
   );
 };

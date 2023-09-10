@@ -26,11 +26,11 @@ export const getSinglePost = ((req, res) => {
 export const createPost = ((req, res) => {
     const token = req.cookies.token;
     if (!token) {
-        return res.status(401).json({ message: "You are not Authorized" });
+        return res.status(401).json({ isToken: false, message: "You are not Authorized" });
     }
     Jwt.verify(token, process.env.JWT_SECRET_KEY, (err, userInfo) => {
         if (err) {
-            return res.status(403).json({ message: "Token is not valid" });
+            return res.status(403).json({ isToken: false, message: "Token is not valid" });
         }
         const q = "INSERT INTO posts(`uid`,`title`,`image`,`description`,`catagory`,`date`,`lastupdate`,`visibility`) VALUES(?)";
         const value = [userInfo.id, req.body.title, req.body.image, req.body.description, req.body.catagory, req.body.date, req.body.lastupdate, req.body.visibility];
@@ -39,7 +39,7 @@ export const createPost = ((req, res) => {
             if (error) {
                 return res.status(500).json(error);
             }
-            return res.json("Post created successfully");
+            return res.json({ isToken: true, message: "Post created successfully" });
         });
     });
 })
@@ -47,11 +47,11 @@ export const createPost = ((req, res) => {
 export const deletePost = ((req, res) => {
     const token = req.cookies.token;
     if (!token) {
-        return res.status(401).json({ message: "You are not Authorized" });
+        return res.status(401).json({ isToken: false, message: "You are not Authorized" });
     }
     Jwt.verify(token, process.env.JWT_SECRET_KEY, (err, userInfo) => {
         if (err) {
-            return res.status(403).json({ message: "Token is not valid" });
+            return res.status(403).json({ isToken: false, message: "Token is not valid" });
         }
         const postId = req.params.id;
         const q = "DELETE FROM posts WHERE `id` = ? AND `uid` = ?";
@@ -59,7 +59,7 @@ export const deletePost = ((req, res) => {
             if (error) {
                 req.status(403).json({ message: "You are not Authorized" });
             }
-            return res.json({ message: "Post deleted successfully" })
+            return res.json({ isToken: true, message: "Post deleted successfully" })
         });
     });
 })
@@ -67,11 +67,11 @@ export const deletePost = ((req, res) => {
 export const updatePost = ((req, res) => {
     const token = req.cookies.token;
     if (!token) {
-        return res.status(401).json({ message: "You are not Authorized" });
+        return res.status(401).json({ isToken: false, message: "You are not Authorized" });
     }
     Jwt.verify(token, process.env.JWT_SECRET_KEY, (err, userInfo) => {
         if (err) {
-            return res.status(403).json({ message: "Token is not valid" });
+            return res.status(403).json({ isToken: false, message: "Token is not valid" });
         }
         const q = "UPDATE posts SET `title` = ?, `description` = ?, `catagory` = ?, `visibility` = ?, `lastupdate` = ? WHERE `id` = ? AND `uid` = ?";
 
@@ -79,7 +79,7 @@ export const updatePost = ((req, res) => {
             if (error) {
                 return res.status(500).json(error);
             }
-            return res.json("Post updated successfully");
+            return res.json({ isToken: true, message: "Post updated successfully" });
         });
     });
 })

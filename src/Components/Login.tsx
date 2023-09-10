@@ -4,12 +4,12 @@ import AuthContext, {
   AuthContextType,
   LoginUser,
 } from "../Context/AuthContext";
-import {BiLogIn} from "react-icons/bi";
+import { BiLogIn } from "react-icons/bi";
 
 const Login = () => {
   document.title = "Psyblog | Login";
 
-  const { isAuth,login } = useContext(AuthContext) as AuthContextType;
+  const { login, currentuser } = useContext(AuthContext) as AuthContextType;
   const Navigate = useNavigate();
   const [user, setUser] = useState<LoginUser>({
     email: "",
@@ -28,7 +28,7 @@ const Login = () => {
     e.preventDefault();
     try {
       login(user);
-      if(!isAuth){
+      if (currentuser.isAuth === false) {
         setError("Invalid Email or Password");
         setTimeout(() => {
           setError("");
@@ -37,7 +37,7 @@ const Login = () => {
       }
       Navigate("/");
     } catch (error: any) {
-      setError(error.response.data.message);
+      setError(error.response);
       setTimeout(() => {
         setError("");
       }, 2000);
@@ -70,12 +70,12 @@ const Login = () => {
             />
           </div>
         </form>
-        {error!=="" && <p>**{error}</p>}
+        {error !== "" && <p>**{error}</p>}
         <small>
           Don't Have An Account Yet? <Link to="/registration">Sign Up</Link>{" "}
         </small>
         <button type="submit" onClick={handleClick}>
-          Login{" "}<BiLogIn className="icon"/>
+          Login <BiLogIn className="icon" />
         </button>
       </div>
       <div className="bg-img bg-login"></div>

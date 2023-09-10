@@ -8,6 +8,7 @@ import userRouter from './routes/users.js';
 import cookieParser from 'cookie-parser';
 const app = express();
 const port = process.env.PORT || 5000;
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors({ origin: true, credentials: true }));
 app.use(cookieParser());
@@ -17,8 +18,9 @@ const storage = multer.diskStorage({
         cb(null, "../public/uploads");
     },
     filename: (req, file, cb) => {
+        const extension = file.mimetype.split("/")[1];
         const uniqueSuffix = Date.now() + "_" + Math.round(Math.random() * 1E9);
-        cb(null, uniqueSuffix + "_" + file.originalname);
+        cb(null, uniqueSuffix + "." + extension);
     }
 })
 const upload = multer({ storage: storage });

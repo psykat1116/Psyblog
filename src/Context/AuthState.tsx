@@ -6,7 +6,6 @@ const AuthState = ({ children }: { children: React.ReactNode }) => {
   const [isLogin, setLogin] = useState<boolean>(
     localStorage.getItem("currentuser") !== null ? true : false
   );
-  const [isAuth, setAuth] = useState<boolean>(false);
   const [currentuser, setCurrentUser] = useState<currentUser>(
     localStorage.getItem("currentuser") !== null
       ? JSON.parse(localStorage.getItem("currentuser") as string)
@@ -31,7 +30,6 @@ const AuthState = ({ children }: { children: React.ReactNode }) => {
       localStorage.setItem("currentuser", JSON.stringify(data));
       setCurrentUser(data);
       setLogin(true);
-      setAuth(data.isAuth);
     } catch (error) {
       console.log(error);
     }
@@ -46,9 +44,9 @@ const AuthState = ({ children }: { children: React.ReactNode }) => {
         name: "",
         email: "",
         image: "",
+        isAuth: false,
       });
       setLogin(false);
-      setAuth(false);
     } catch (error) {
       console.log(error);
     }
@@ -63,7 +61,6 @@ const AuthState = ({ children }: { children: React.ReactNode }) => {
         logout,
         isLogin,
         setLogin,
-        isAuth,
       }}
     >
       {children}

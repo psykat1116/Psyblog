@@ -24,11 +24,11 @@ export type currentUser = {
   name: string;
   email: string;
   image: string | null;
+  isAuth: boolean;
 }
 
 export type AuthContextType = {
   currentuser: currentUser;
-  isAuth: boolean;
   isLogin: boolean;
   setLogin: (isLogin: boolean) => void;
   setCurrentUser: (currentuser: currentUser) => void;

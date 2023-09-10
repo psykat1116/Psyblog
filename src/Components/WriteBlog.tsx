@@ -1,6 +1,5 @@
 import React, { useState, useRef } from "react";
 import JoditEditor from "jodit-react";
-import placeholder from "../image/image-placeholder.jpg";
 import { FiUploadCloud } from "react-icons/fi";
 import { LuSend } from "react-icons/lu";
 import { RxUpdate } from "react-icons/rx";
@@ -10,6 +9,7 @@ import axios from "axios";
 import moment from "moment";
 
 const WriteBlog = () => {
+  document.title = "Psyblog | Write Blog";
   const Navigate = useNavigate();
   const editor = useRef(null);
   const state = useLocation().state;
@@ -19,7 +19,7 @@ const WriteBlog = () => {
   const [content, setContent] = useState<string>(state?.description || "");
   const [title, setTitle] = useState<string>(state?.title || "");
   const [image, setImage] = useState<string>(
-    state ? `../uploads/${state.image}` : placeholder.toString()
+    state ? `../uploads/${state.image}` : ""
   );
   const [visibility, setVisibility] = useState<string>(
     state?.visibility || "public"
@@ -28,9 +28,12 @@ const WriteBlog = () => {
   const [catagory, setCatagory] = useState<string>(state?.catagory || "art");
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
     if (!title || !content) {
       alert("Please fill all the fields");
+      return;
+    }
+    if (file === null) {
+      alert("Please select an image");
       return;
     }
     const imageURL = await uploadFile();
@@ -39,7 +42,7 @@ const WriteBlog = () => {
         title: title,
         description: content,
         catagory: catagory,
-        image: file ? imageURL : placeholder.toString(),
+        image: imageURL,
         date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
         lastupdate: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
         visibility: visibility,
@@ -57,7 +60,7 @@ const WriteBlog = () => {
     }
     try {
       const formData = new FormData();
-      formData.append("file", file!);
+      formData.append("file", file);
       const res = await axios.post("/upload", formData);
       return res.data;
     } catch (error) {
@@ -82,10 +85,6 @@ const WriteBlog = () => {
   };
 
   const handleUpdate = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    const imageURL = await uploadFile();
-    if (file === null) {
-      return;
-    }
     try {
       await axios.put(`/posts/${state.id}`, {
         title: title,
@@ -93,9 +92,9 @@ const WriteBlog = () => {
         catagory: catagory,
         lastupdate: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
         visibility: visibility,
-        image: file ? imageURL : state.image,
       });
-      Navigate("/");
+      console.log(state.id);
+      Navigate(`/blogs/${state.id}`);
     } catch (error) {
       console.log(error);
     }
@@ -126,27 +125,32 @@ const WriteBlog = () => {
           </div>
           <div className="right">
             <div className="post-status">
-              <div className="image_box">
-                {state ? (
-                  <img src={image} alt="placeholder" />
-                ) : file ? (
-                  <img src={image} alt="placeholder" />
-                ) : (
-                  <AiOutlineCloudUpload className="icon" />
-                )}
-              </div>
+              {!state && (
+                <div className="image_box">
+                  {state ? (
+                    <img src={image} alt="placeholder" />
+                  ) : file ? (
+                    <img src={image} alt="placeholder" />
+                  ) : (
+                    <AiOutlineCloudUpload className="icon" />
+                  )}
+                </div>
+              )}
               <input
                 type="file"
                 name="main-image"
                 id="main-image"
                 hidden
+                accept="image/png, image/jpeg"
                 onChange={updateFile}
               />
               <div className="opt-group">
                 <div className="actions">
-                  <button onClick={openFile}>
-                    Upload Image <FiUploadCloud className="icon" />
-                  </button>
+                  {!state && (
+                    <button onClick={openFile}>
+                      Upload Image <FiUploadCloud className="icon" />
+                    </button>
+                  )}
                   <button>Save as draft</button>
                   {state ? (
                     <button onClick={handleUpdate}>

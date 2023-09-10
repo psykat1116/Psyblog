@@ -6,12 +6,13 @@ import axios from "axios";
 import { useLocation } from "react-router-dom";
 import { Post } from "../Context/AuthContext";
 
-export const getText = (html:string) => {
+export const getText = (html: string) => {
   const doc = new DOMParser().parseFromString(html, "text/html");
   return doc.body.innerText;
 };
 
 const Home = () => {
+  document.title = "Psyblog - A Modern Website For All The Bloggers";
   const location = useLocation().search;
   const [posts, setPosts] = useState<Post[]>([]);
 

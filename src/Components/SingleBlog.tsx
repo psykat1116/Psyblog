@@ -33,6 +33,7 @@ const SingleBlog = () => {
       : -1
   );
   const blogID = useLocation().pathname.split("/")[2];
+  document.title = `Psyblog | Blog - ${blogID}`;
   const [singlepost, setSinglePost] = useState<User>({
     name: "",
     image: "",
@@ -109,7 +110,7 @@ const SingleBlog = () => {
               </div>
               {isLogin && singlepost.uid == userid && (
                 <>
-                  <Link to="/write?edit=true" state={singlepost}>
+                  <Link to="/write" state={singlepost}>
                     <button>
                       <BiEditAlt />
                     </button>
@@ -121,9 +122,11 @@ const SingleBlog = () => {
               )}
             </div>
             <h2>{singlepost.title}</h2>
-            <section dangerouslySetInnerHTML={{
-            __html: DOMPurify.sanitize(singlepost.description),
-          }}></section>
+            <section
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(singlepost.description),
+              }}
+            ></section>
           </div>
           <div className="suggest-blog">
             <h3>Similar Posts You May Like</h3>

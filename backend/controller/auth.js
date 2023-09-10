@@ -45,15 +45,15 @@ export const login = async (req, res) => {
             return res.status(500).json({ message: err });
         }
         if (!result.length) {
-            return res.status(401).json({ message: "Invalid email or password" });
+            return res.status(401).json({ isAuth: false, message: "Invalid email or password" });
         }
         const isPasswordCorrect = await bcrypt.compare(req.body.password, result[0].password);
         if (!isPasswordCorrect) {
-            return res.status(401).json({ message: "Invalid email or password" });
+            return res.status(401).json({ isAuth: false, message: "Invalid email or password" });
         }
-        const { password, ...others } = result[0];
-        const token = jwt.sign({ email: result[0].email, id: result[0].id }, process.env.JWT_SECRET_KEY);
-        res.cookie("token", token, { httpOnly: true }).status(200).json(others);
+        const { email, id, image, name } = result[0];
+        const token = jwt.sign({ email: result[0].email, id: result[0].id }, process.env.JWT_SECRET_KEY, { expiresIn: "1day" });
+        res.cookie("token", token, { httpOnly: true }).status(200).json({ email, id, image, name, isAuth: true });
     });
 }
 

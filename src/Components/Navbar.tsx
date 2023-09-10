@@ -1,12 +1,13 @@
-import React, { useContext,useState } from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import image from "../image/logo.png";
 import { HiOutlineLogout, HiOutlineLogin, HiPencilAlt } from "react-icons/hi";
 import { CgProfile } from "react-icons/cg";
 import AuthContext, { AuthContextType } from "../Context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
 
 const Navbar = () => {
+  const location = useLocation();
   const Navigate = useNavigate();
   const { logout, isLogin, currentuser } = useContext(
     AuthContext

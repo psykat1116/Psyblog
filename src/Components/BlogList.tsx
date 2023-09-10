@@ -16,7 +16,7 @@ const BlogList = ({ post }: BlogProps) => {
       <div className="details">
         <h1>{title}</h1>
         <p>
-          {getText(description).slice(0, 300) +
+          {getText(description)!.slice(0, 300) +
             (description.length > 300 ? " . . . . . ." : "")}
         </p>
         <Link to={`/blogs/${id}`}>

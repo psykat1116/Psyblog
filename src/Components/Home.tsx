@@ -6,9 +6,9 @@ import axios from "axios";
 import { useLocation } from "react-router-dom";
 import { Post } from "../Context/AuthContext";
 
-export const getText = (html: string) => {
+export const getText = (html:string) => {
   const doc = new DOMParser().parseFromString(html, "text/html");
-  return doc.body.textContent as string;
+  return doc.body.innerText;
 };
 
 const Home = () => {

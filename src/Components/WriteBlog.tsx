@@ -1,14 +1,13 @@
 import React, { useState, useRef } from "react";
 import JoditEditor from "jodit-react";
-import Footer from "./Footer";
 import placeholder from "../image/image-placeholder.jpg";
 import { FiUploadCloud } from "react-icons/fi";
 import { LuSend } from "react-icons/lu";
-import { GrUpdate } from "react-icons/gr";
+import { RxUpdate } from "react-icons/rx";
 import { useLocation, useNavigate } from "react-router-dom";
+import { AiOutlineCloudUpload } from "react-icons/ai";
 import axios from "axios";
 import moment from "moment";
-import Navbar from "./Navbar";
 
 const WriteBlog = () => {
   const Navigate = useNavigate();
@@ -30,6 +29,10 @@ const WriteBlog = () => {
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    if (!title || !content) {
+      alert("Please fill all the fields");
+      return;
+    }
     const imageURL = await uploadFile();
     try {
       await axios.post("/posts", {
@@ -48,6 +51,10 @@ const WriteBlog = () => {
   };
 
   const uploadFile = async () => {
+    if (file === null) {
+      alert("Please select an image");
+      return;
+    }
     try {
       const formData = new FormData();
       formData.append("file", file!);
@@ -75,7 +82,10 @@ const WriteBlog = () => {
   };
 
   const handleUpdate = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+    const imageURL = await uploadFile();
+    if (file === null) {
+      return;
+    }
     try {
       await axios.put(`/posts/${state.id}`, {
         title: title,
@@ -83,6 +93,7 @@ const WriteBlog = () => {
         catagory: catagory,
         lastupdate: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
         visibility: visibility,
+        image: file ? imageURL : state.image,
       });
       Navigate("/");
     } catch (error) {
@@ -92,7 +103,6 @@ const WriteBlog = () => {
 
   return (
     <>
-      <Navbar />
       <div className="write">
         <div className="writebox">
           <div className="left">
@@ -110,12 +120,21 @@ const WriteBlog = () => {
                 value={content}
                 config={config}
                 onChange={(e) => {}}
+                onBlur={(e) => setContent(e)}
               />
             </div>
           </div>
           <div className="right">
             <div className="post-status">
-              <img src={image} alt="placeholder" />
+              <div className="image_box">
+                {state ? (
+                  <img src={image} alt="placeholder" />
+                ) : file ? (
+                  <img src={image} alt="placeholder" />
+                ) : (
+                  <AiOutlineCloudUpload className="icon" />
+                )}
+              </div>
               <input
                 type="file"
                 name="main-image"
@@ -131,7 +150,7 @@ const WriteBlog = () => {
                   <button>Save as draft</button>
                   {state ? (
                     <button onClick={handleUpdate}>
-                      Update <GrUpdate className="icon" />
+                      Update <RxUpdate className="icon" />
                     </button>
                   ) : (
                     <button onClick={handleSubmit}>
@@ -173,7 +192,6 @@ const WriteBlog = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 };

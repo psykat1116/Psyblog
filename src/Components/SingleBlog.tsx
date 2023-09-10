@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
@@ -8,8 +8,8 @@ import SuggestBlog from "./SuggestBlog";
 import axios from "axios";
 import moment from "moment";
 import placeholder_img from "../image/Profile_Placeholder.jpg";
-import { getText } from "./Home";
 import AuthContext, { AuthContextType } from "../Context/AuthContext";
+import DOMPurify from "dompurify";
 
 export type User = {
   id: number;
@@ -109,7 +109,7 @@ const SingleBlog = () => {
               </div>
               {isLogin && singlepost.uid == userid && (
                 <>
-                  <Link to="/write?blogid=2" state={singlepost}>
+                  <Link to="/write?edit=true" state={singlepost}>
                     <button>
                       <BiEditAlt />
                     </button>
@@ -121,7 +121,9 @@ const SingleBlog = () => {
               )}
             </div>
             <h2>{singlepost.title}</h2>
-            <section>{getText(singlepost.description)}</section>
+            <section dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(singlepost.description),
+          }}></section>
           </div>
           <div className="suggest-blog">
             <h3>Similar Posts You May Like</h3>

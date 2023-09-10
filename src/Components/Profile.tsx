@@ -1,8 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import AuthContext, { AuthContextType } from "../Context/AuthContext";
 import {
   useLocation,
-  Link,
   useNavigate,
   Routes,
   Route,

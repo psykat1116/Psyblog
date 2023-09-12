@@ -19,7 +19,7 @@ const Home = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await axios.get(`/posts${location}`);
+        const res = await axios.get(`/posts`);
         setPosts(res.data);
       } catch (error: any) {
         console.log(error.message);

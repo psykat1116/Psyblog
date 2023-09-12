@@ -36,20 +36,21 @@ const WriteBlog = () => {
       alert("Please select an image");
       return;
     }
-    const imageURL = await uploadFile();
     try {
-      await axios.post("/posts", {
+      await axios.post("/posts/new", {
         title: title,
         description: content,
         catagory: catagory,
-        image: imageURL,
+        image: await uploadFile(),
         date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
         lastupdate: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
         visibility: visibility,
       });
-      Navigate("/");
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
+      if (error.request.status === 401 || error.request.status === 403) {
+        Navigate("/login");
+      }
     }
   };
 
@@ -85,6 +86,7 @@ const WriteBlog = () => {
   };
 
   const handleUpdate = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     try {
       await axios.put(`/posts/${state.id}`, {
         title: title,
@@ -93,9 +95,11 @@ const WriteBlog = () => {
         lastupdate: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
         visibility: visibility,
       });
-      console.log(state.id);
       Navigate(`/blogs/${state.id}`);
-    } catch (error) {
+    } catch (error: any) {
+      if (error.request.status === 401 || error.request.status === 403) {
+        Navigate("/login");
+      }
       console.log(error);
     }
   };
@@ -170,7 +174,7 @@ const WriteBlog = () => {
                     onChange={(e) => setVisibility(e.target.value)}
                   >
                     <option value="public">Public</option>
-                    <option value="public">Private</option>
+                    <option value="private">Private</option>
                   </select>
                 </div>
                 <div className="cat">

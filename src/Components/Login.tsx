@@ -5,11 +5,14 @@ import AuthContext, {
   LoginUser,
 } from "../Context/AuthContext";
 import { BiLogIn } from "react-icons/bi";
+import axios from "axios";
 
 const Login = () => {
   document.title = "Psyblog | Login";
 
-  const { login, currentuser } = useContext(AuthContext) as AuthContextType;
+  const { setLogin, setCurrentUser } = useContext(
+    AuthContext
+  ) as AuthContextType;
   const Navigate = useNavigate();
   const [user, setUser] = useState<LoginUser>({
     email: "",
@@ -27,20 +30,27 @@ const Login = () => {
   async function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
     try {
-      login(user);
-      if (currentuser.isAuth === false) {
-        setError("Invalid Email or Password");
-        setTimeout(() => {
-          setError("");
-        }, 2000);
-        return;
-      }
+      const {email, password} = user;
+      const res = await axios.post("/auth/login", {email, password});
+      const data = await res.data;
+      localStorage.setItem("currentuser", JSON.stringify(data));
+      setCurrentUser(data);
+      setLogin(true);
       Navigate("/");
     } catch (error: any) {
-      setError(error.response);
-      setTimeout(() => {
-        setError("");
-      }, 2000);
+      if(error.request.status === 401){
+        setError("Invalid Credentials");
+        setTimeout(()=>{
+          setError("");
+        },1500)
+      }
+      else if(error.request.status === 500){
+        setError("Server Error");
+        setTimeout(()=>{
+          setError("");
+        },1500)
+      }
+      // console.log(error.request.status);
     }
   }
 

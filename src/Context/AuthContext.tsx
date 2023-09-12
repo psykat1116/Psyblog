@@ -32,7 +32,6 @@ export type AuthContextType = {
   isLogin: boolean;
   setLogin: (isLogin: boolean) => void;
   setCurrentUser: (currentuser: currentUser) => void;
-  login: (user:LoginUser) => void;
   logout: () => void;
 };
 

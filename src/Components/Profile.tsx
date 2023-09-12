@@ -1,51 +1,79 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import AuthContext, { AuthContextType } from "../Context/AuthContext";
 import {
   useLocation,
-  useNavigate,
   Routes,
   Route,
+  Link,
+  useNavigate,
 } from "react-router-dom";
 import profile from "../image/Profile_Placeholder.jpg";
+import Info from "./Info";
+import Account from "./Account";
+import Error from "./Error";
+import Visible from "./Visible";
+import {
+  MdOutlineManageAccounts,
+  MdPublic,
+  MdOutlineLogout,
+  MdOutlineDrafts,
+} from "react-icons/md";
+import { RiGitRepositoryPrivateLine } from "react-icons/ri";
+import { BiUserCircle } from "react-icons/bi";
 
 const Profile = () => {
-  const id = useLocation().pathname.split("/")[2];
   const Navigate = useNavigate();
-  const { currentuser } = useContext(AuthContext) as AuthContextType;
-  useEffect(() => {
-    if (currentuser.id !== Number(id)) {
-      Navigate("/");
-    }
-  }, [Navigate, currentuser.id, id]);
+  const { currentuser, logout } = useContext(AuthContext) as AuthContextType;
   return (
     <div id="profile">
       <div className="control-panel">
         <div className="pofile-img">
           <img src={profile} alt="profile" />
-          <div className="info">
-            <h5>{currentuser.name}</h5>
-            <h5>{currentuser.email}</h5>
-          </div>
         </div>
-        <p></p>
-        <ul className="control">
-          <li>Basic Info</li>
-          <li>Public Blogs</li>
-          <li>Private Blogs</li>
-          <li>Draft</li>
-          <li>Account</li>
-          <li>Logout</li>
-        </ul>
+        <div className="info">
+          <h3>{currentuser.name}</h3>
+        </div>
+        <div className="control">
+          <Link to={`/profile/${currentuser.id}`} className="active">
+            <BiUserCircle className="icon" />
+            Info
+          </Link>
+          <Link to={`/profile/${currentuser.id}/blog?status=public`}>
+            <MdPublic className="icon" />
+            Blogs
+          </Link>
+          {currentuser.id === Number(useLocation().pathname.split("/")[2]) && (
+            <>
+              <Link to={`/profile/${currentuser.id}/blog?status=private`}>
+                <RiGitRepositoryPrivateLine className="icon" />
+                Private
+              </Link>
+              <Link to={`/profile/${currentuser.id}/blog?status=draft`}>
+                <MdOutlineDrafts className="icon" />
+                Draft
+              </Link>
+              <Link to={`/profile/${currentuser.id}/account`}>
+                <MdOutlineManageAccounts className="icon" />
+                Account
+              </Link>
+              <button onClick={()=>{logout();Navigate("/")}}>
+                <MdOutlineLogout className="icon" />
+                Logout
+              </button>
+            </>
+          )}
+        </div>
       </div>
       <div className="in-details">
         <div className="main-box">
-            <Routes>
-              <Route path="/" element={<h1>Basic Info</h1>} />
-              <Route path="/?visibily=public" element={<h1>Public Blogs</h1>} />
-              <Route path="/?visibility=private" element={<h1>Private Blogs</h1>} />
-              <Route path="/?status=draft" element={<h1>Draft</h1>} />
-              <Route path="/account" element={<h1>Account</h1>} />
-            </Routes>
+          <Routes>
+            <Route path="/" element={<Info />} />
+            <Route path="/blog" element={<Visible />} />
+            <Route path="/blog" element={<Visible />} />
+            <Route path="/blog" element={<Visible />} />
+            <Route path="/account" element={<Account />} />
+            <Route path='*' element={<Error/>}/>
+          </Routes>
         </div>
       </div>
     </div>

@@ -37,7 +37,7 @@ const Register = () => {
       setError("Please enter valid details");
       setTimeout(() => {
         setError("");
-      },2000)
+      }, 2000);
       return;
     }
     try {
@@ -49,71 +49,71 @@ const Register = () => {
       });
       Navigate("/login");
     } catch (error: any) {
-      setError(error.response.data.message);
-      setTimeout(() => {
-        setError("");
-      }, 2000);
+      if (error.request.status === 409) {
+        setError("Username or Email already exists");
+        setTimeout(() => {
+          setError("");
+        }, 2000);
+      }
     }
   }
 
   return (
     <div className="signup-box">
-        <div className="signup">
-          <h1>Create Your Account</h1>
-          <form>
-            <div className="name-box">
-              <label htmlFor="name">Username</label>
-              <input
-                type="text"
-                placeholder="Username"
-                id="name"
-                name="name"
-                value={user.name}
-                onChange={handleChange}
-                required={true}
-              />
-              {user.name.length < 2 && (
-                <p>**Username length must be atlest 2</p>
-              )}
-            </div>
-            <div className="email-box">
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                placeholder="Email"
-                id="email"
-                name="email"
-                value={user.email}
-                onChange={handleChange}
-                required={true}
-              />
-              {!validateEmail(user.email) && <p>**Enter a valid email</p>}
-            </div>
-            <div className="password-box">
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                placeholder="Password"
-                id="password"
-                name="password"
-                value={user.password}
-                onChange={handleChange}
-                required={true}
-              />
-              {user.password.length < 8 && (
-                <p>**Password length must be atlest 8</p>
-              )}
-            </div>
-          </form>
-          {error && <p style={{ color: "red" }}>**{error}</p>}
-          <small>
-            Already Have An Account? <Link to="/login">Login</Link>
-          </small>
-          <button type="submit" onClick={handleSubmit}>
-            Sign Up
-          </button>
-        </div>
-        <div className="bg-img bg-signup"></div>
+      <div className="signup">
+        <h1>Create Your Account</h1>
+        <form>
+          <div className="name-box">
+            <label htmlFor="name">Username</label>
+            <input
+              type="text"
+              placeholder="Username"
+              id="name"
+              name="name"
+              value={user.name}
+              onChange={handleChange}
+              required={true}
+            />
+            {user.name.length < 2 && <p>**Username length must be atlest 2</p>}
+          </div>
+          <div className="email-box">
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              placeholder="Email"
+              id="email"
+              name="email"
+              value={user.email}
+              onChange={handleChange}
+              required={true}
+            />
+            {!validateEmail(user.email) && <p>**Enter a valid email</p>}
+          </div>
+          <div className="password-box">
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              placeholder="Password"
+              id="password"
+              name="password"
+              value={user.password}
+              onChange={handleChange}
+              required={true}
+            />
+            {user.password.length < 8 && (
+              <p>**Password length must be atlest 8</p>
+            )}
+          </div>
+        </form>
+        {error && <p style={{ color: "red" }}>**{error}</p>}
+        <small>
+          Already Have An Account? <Link to="/login">Login</Link>
+        </small>
+        <button type="submit" onClick={handleSubmit}>
+          Sign Up
+        </button>
+      </div>
+      <div className="bg-img bg-signup"></div>
     </div>
   );
 };

@@ -17,24 +17,6 @@ const AuthState = ({ children }: { children: React.ReactNode }) => {
         }
   );
 
-  const login = async ({
-    email,
-    password,
-  }: {
-    email: string;
-    password: string;
-  }) => {
-    try {
-      const res = await axios.post("/auth/login", { email, password });
-      const data = await res.data;
-      localStorage.setItem("currentuser", JSON.stringify(data));
-      setCurrentUser(data);
-      setLogin(true);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const logout = async () => {
     try {
       await axios.post("/auth/logout");
@@ -57,7 +39,6 @@ const AuthState = ({ children }: { children: React.ReactNode }) => {
       value={{
         currentuser,
         setCurrentUser,
-        login,
         logout,
         isLogin,
         setLogin,

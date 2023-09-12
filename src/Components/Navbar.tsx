@@ -1,17 +1,14 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import image from "../image/logo.png";
-import { HiOutlineLogout, HiOutlineLogin, HiPencilAlt } from "react-icons/hi";
+import { HiOutlineLogin, HiPencilAlt } from "react-icons/hi";
 import { CgProfile } from "react-icons/cg";
 import AuthContext, { AuthContextType } from "../Context/AuthContext";
-import { useNavigate,useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-  const location = useLocation();
   const Navigate = useNavigate();
-  const { logout, isLogin, currentuser } = useContext(
-    AuthContext
-  ) as AuthContextType;
+  const { isLogin, currentuser } = useContext(AuthContext) as AuthContextType;
 
   function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
     if (e.target.value === "all") {
@@ -55,15 +52,6 @@ const Navbar = () => {
               <Link to={`/profile/${currentuser.id}`}>
                 <CgProfile className="icon" />
               </Link>
-            </span>
-            <span
-              id="logout"
-              onClick={() => {
-                logout();
-                Navigate("/");
-              }}
-            >
-              Logout <HiOutlineLogout className="icon icon-log" />
             </span>
           </>
         )}

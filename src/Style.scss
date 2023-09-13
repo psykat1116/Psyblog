@@ -739,7 +739,8 @@
         margin-left: calc(100% - 78.6%);
         min-height: 100vh;
         width: 100%;
-        background: url("./image/profile_bg.jpg");
+        background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+          url("./image/profile_bg.jpg");
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -751,12 +752,15 @@
           display: flex;
           justify-content: center;
           align-items: center;
+          margin: 2rem 0;
           .info {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             background-color: rgba($color: #000000, $alpha: 0.4);
+            box-shadow: 10px 10px 10px rgba($color: #000000, $alpha: 0.4);
             backdrop-filter: blur(20px);
+            border-radius: 7px;
             padding: 10px;
             .left {
               width: 50%;
@@ -817,21 +821,22 @@
           }
           .visible {
             position: relative;
-            width: 100%;
             min-height: 30vh;
             display: flex;
+            padding: 10px;
+            width: 120%;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             #single-tab-blog {
               position: relative;
+              width: 70vw;
               padding: 20px;
               display: flex;
-              width: 100%;
               justify-content: space-around;
               align-items: center;
               margin: 1rem 0;
-              background-color: rgba($color: #000000, $alpha: 0.6);
+              background-color: rgba($color: #000000, $alpha: 0.4);
               backdrop-filter: blur(20px);
               border-radius: 5px;
               .details {
@@ -874,6 +879,101 @@
               }
             }
           }
+          .account {
+            background-color: red;
+            width: 100%;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            border-radius: 7px;
+            box-shadow: 10px 10px 10px rgba($color: #000000, $alpha: 0.3);
+            background-color: rgba($color: #000000, $alpha: 0.4);
+            backdrop-filter: blur(20px);
+            h2{
+              font-family: "Satisfy", cursive;
+            }
+            div {
+              width: 100%;
+              display: grid;
+              grid-template-columns: 0.5fr 2fr 0.8fr;
+              gap: 10px;
+              margin: 5px 0;
+              padding: 5px 0 5px 0;
+              border-bottom: 1px solid #fff;
+              label {
+                width: 100%;
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+              }
+              .data {
+                border: none;
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                input,
+                select,
+                textarea {
+                  min-width: 50%;
+                }
+                textarea {
+                  height: 150px;
+                  resize: none;
+                }
+                input,
+                textarea {
+                  padding: 8px;
+                  border: 1px solid #fff;
+                  background: transparent;
+                  font-family: "Poppins", sans-serif;
+                  color: #fff;
+                  &:focus {
+                    outline: transparent !important;
+                    border-color: #fff;
+                    box-shadow: none;
+                  }
+                  &::placeholder {
+                    color: #d4bfbf;
+                  }
+                }
+                input[type="date"]::-webkit-calendar-picker-indicator{
+                  cursor: pointer;
+                  filter: invert(1);
+                }
+              }
+              .action {
+                display: flex;
+                border: none;
+                justify-content: flex-end;
+                align-items: center;
+                button {
+                  padding: 5px 10px;
+                  font-size: 14px;
+                  font-family: "Poppins", sans-serif;
+                  border: 1px solid #fff;
+                  background-color: transparent;
+                  color: #fff;
+                  border-radius: 4px;
+                }
+              }
+            }
+            :nth-child(4) {
+              padding-bottom: 15px;
+              button{
+                width: 10rem;
+                padding: 10px;
+                margin-left: 10px;
+                border: 1px solid #fff;
+                background-color: transparent;
+                font-family: "Poppins", sans-serif;
+                font-size: 14px;
+                color: #fff;
+                border-radius: 3px;
+              }
+            }
+          }
         }
       }
     }
@@ -884,7 +984,7 @@
   input {
     font-family: "Poppins", sans-serif;
   }
-  &::-webkit-scrollbar{
+  &::-webkit-scrollbar {
     width: 0px;
   }
 }

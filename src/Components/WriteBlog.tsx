@@ -16,6 +16,7 @@ const WriteBlog = () => {
   const config = {
     height: "500px",
   };
+  const [draft, setDraft] = useState<boolean>(false);
   const [content, setContent] = useState<string>(state?.description || "");
   const [title, setTitle] = useState<string>(state?.title || "");
   const [image, setImage] = useState<string>(
@@ -27,7 +28,7 @@ const WriteBlog = () => {
   const [file, setFile] = useState<File | null>(null);
   const [catagory, setCatagory] = useState<string>(state?.catagory || "art");
 
-  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = async () => {
     if (!title || !content) {
       alert("Please fill all the fields");
       return;
@@ -44,7 +45,7 @@ const WriteBlog = () => {
         image: await uploadFile(),
         date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
         lastupdate: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
-        visibility: visibility,
+        visibility: draft === true ? "draft" : visibility,
       });
     } catch (error: any) {
       console.log(error);
@@ -83,6 +84,12 @@ const WriteBlog = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleDraft = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    await handleSubmit();
+    Navigate("/");
   };
 
   const handleUpdate = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -151,11 +158,20 @@ const WriteBlog = () => {
               <div className="opt-group">
                 <div className="actions">
                   {!state && (
-                    <button onClick={openFile}>
-                      Upload Image <FiUploadCloud className="icon" />
-                    </button>
+                    <>
+                      <button onClick={openFile}>
+                        Upload Image <FiUploadCloud className="icon" />
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          setDraft(true);
+                          handleDraft(e);
+                        }}
+                      >
+                        Save as draft
+                      </button>
+                    </>
                   )}
-                  <button>Save as draft</button>
                   {state ? (
                     <button onClick={handleUpdate}>
                       Update <RxUpdate className="icon" />

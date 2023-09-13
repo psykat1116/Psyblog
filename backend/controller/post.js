@@ -2,8 +2,7 @@ import { db } from '../dbconfig.js';
 import Jwt from 'jsonwebtoken';
 
 export const getAllPosts = ((req, res) => {
-    const q = req.query.catagory ? "SELECT * FROM posts WHERE catagory = ?" : "SELECT * FROM posts";
-
+    const q = req.query.catagory !== undefined ? `SELECT * FROM posts WHERE catagory = ? AND visibility = "public" ` : `SELECT * FROM posts WHERE visibility = "public"`;
     db.query(q, [req.query.catagory], (err, result) => {
         if (err) {
             return res.status(500).send(err);

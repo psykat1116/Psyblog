@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import {
   AiFillFacebook,
   AiOutlineInstagram,
   AiTwotoneStar,
   AiFillEye,
+  AiFillStar,
+  AiOutlineInfoCircle,
 } from "react-icons/ai";
 import {
   FaRedditAlien,
@@ -13,34 +15,40 @@ import {
   FaPinterestP,
   FaTumblr,
 } from "react-icons/fa";
-import { MdLocationOn, MdAlternateEmail } from "react-icons/md";
+import { BsGlobe2 } from "react-icons/bs";
+import { MdLocationOn } from "react-icons/md";
 import { RiChatFollowUpLine, RiVipCrownLine } from "react-icons/ri";
 import { PiOfficeChairFill } from "react-icons/pi";
+import AuthContext, { AuthContextType } from "../Context/AuthContext";
 
 const Info = () => {
+  const { currentuser } = useContext(AuthContext) as AuthContextType;
+
   return (
     <div className="info">
       <div className="left">
-        <h2>Saikat Samanta</h2>
-        <p>
-          <MdLocationOn className="icon" /> India
-        </p>
-        <p>
-          <MdAlternateEmail className="icon" /> samantasaikat03@gmail.com
-        </p>
-        <p>
-          <FaGraduationCap className="icon" /> Jalpaiguri Government Engineering
-          College
-        </p>
-        <p>
-          <PiOfficeChairFill className="icon" /> Software Developer
-        </p>
-        <p>
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur
-          quam, veniam nisi vitae, dignissimos repudiandae assumenda ab quas
-          obcaecati illo consequuntur. Aperiam porro ab officia provident
-          voluptas quidem eos deserunt sunt obcaecati explicabo. Saepe velit
-        </p>
+        <h2>{currentuser.name}</h2>
+        {currentuser.location && (
+          <p>
+            <MdLocationOn className="icon" /> {currentuser.location}
+          </p>
+        )}
+        {currentuser.education && (
+          <p>
+            <FaGraduationCap className="icon" /> {currentuser.education}
+          </p>
+        )}
+        {currentuser.work && (
+          <p>
+            <PiOfficeChairFill className="icon" /> {currentuser.work}
+          </p>
+        )}
+        {currentuser.summary && (
+          <p>
+            <AiOutlineInfoCircle className="icon" />
+            {currentuser.summary}
+          </p>
+        )}
       </div>
       <div className="right">
         <div className="community">
@@ -49,33 +57,59 @@ const Info = () => {
           </p>
           <p>
             <AiTwotoneStar className="icon" /> Rating
+            <AiFillStar className="icon" /> <AiFillStar className="icon" />
+            <AiFillStar className="icon" /> <AiFillStar className="icon" />
           </p>
           <p>
-            <RiChatFollowUpLine className="icon" /> Followers
+            <RiChatFollowUpLine className="icon" /> Followers 3K+
           </p>
           <p>
-            <AiFillEye className="icon" /> Views
+            <AiFillEye className="icon" /> Views 10K+
           </p>
         </div>
         <div className="social-media">
-          <Link to="/target" target="_blank">
-            <AiFillFacebook className="icon" />
-          </Link>
-          <Link to="/target" target="_blank">
-            <FaRedditAlien className="icon" />
-          </Link>
-          <Link to="/target" target="_blank">
-            <FaTwitter className="icon" />
-          </Link>
-          <Link to="/target" target="_blank">
-            <AiOutlineInstagram className="icon" />
-          </Link>
-          <Link to="/target" target="_blank">
-            <FaPinterestP className="icon" />
-          </Link>
-          <Link to="/target" target="_blank">
-            <FaTumblr className="icon" />
-          </Link>
+          {currentuser.website && (
+            <Link to={currentuser.website} target="_blank">
+              <BsGlobe2 className="icon" />
+              <small>{currentuser.website}</small>
+            </Link>
+          )}
+          {currentuser.facebook && (
+            <Link to={currentuser.facebook} target="_blank">
+              <AiFillFacebook className="icon" />
+              <small>{currentuser.facebook}</small>
+            </Link>
+          )}
+          {currentuser.reddit && (
+            <Link to={currentuser.reddit} target="_blank">
+              <FaRedditAlien className="icon" />
+              <small>{currentuser.reddit}</small>
+            </Link>
+          )}
+          {currentuser.twitter && (
+            <Link to={currentuser.twitter} target="_blank">
+              <FaTwitter className="icon" />
+              <small>{currentuser.twitter}</small>
+            </Link>
+          )}
+          {currentuser.instagram && (
+            <Link to={currentuser.instagram} target="_blank">
+              <AiOutlineInstagram className="icon" />
+              <small>{currentuser.instagram}</small>
+            </Link>
+          )}
+          {currentuser.pinterest && (
+            <Link to={currentuser.pinterest} target="_blank">
+              <FaPinterestP className="icon" />
+              <small>{currentuser.pinterest}</small>
+            </Link>
+          )}
+          {currentuser.tumblr && (
+            <Link to={currentuser.tumblr} target="_blank">
+              <FaTumblr className="icon" />
+              <small>{currentuser.tumblr}</small>
+            </Link>
+          )}
         </div>
       </div>
     </div>

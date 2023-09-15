@@ -763,6 +763,7 @@
             border-radius: 7px;
             border: 1px solid #fff;
             padding: 10px;
+            min-width: 90%;
             .left {
               width: 50%;
               display: flex;
@@ -816,6 +817,14 @@
                   color: #fff;
                   font-size: 20px;
                   margin: 5px 0;
+                  text-decoration: none;
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  small{
+                    font-size: 14px;
+                    margin-left: 10px;
+                  }
                 }
               }
             }
@@ -915,7 +924,7 @@
                 display: flex;
                 justify-content: flex-start;
                 align-items: center;
-                p{
+                p {
                   color: #bcdbb5;
                 }
                 input,
@@ -928,7 +937,8 @@
                   resize: none;
                 }
                 input,
-                textarea {
+                textarea,
+                select {
                   padding: 8px;
                   border: 1px solid #fff;
                   background: transparent;
@@ -941,6 +951,9 @@
                   }
                   &::placeholder {
                     color: #d4bfbf;
+                  }
+                  option{
+                    color: #232323;
                   }
                 }
                 input[type="date"]::-webkit-calendar-picker-indicator {

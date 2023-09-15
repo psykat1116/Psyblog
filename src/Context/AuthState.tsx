@@ -10,10 +10,23 @@ const AuthState = ({ children }: { children: React.ReactNode }) => {
     localStorage.getItem("currentuser") !== null
       ? JSON.parse(localStorage.getItem("currentuser") as string)
       : {
-          id: -1,
+          id: 0,
           name: "",
           email: "",
           image: "",
+          gender: "",
+          location: "",
+          birthday: "",
+          summary: "",
+          website: "",
+          instagram: "",
+          facebook: "",
+          twitter: "",
+          reddit: "",
+          pinterest: "",
+          tumblr: "",
+          work: "",
+          education: "",
         }
   );
 
@@ -22,10 +35,23 @@ const AuthState = ({ children }: { children: React.ReactNode }) => {
       await axios.post("/auth/logout");
       localStorage.removeItem("currentuser");
       setCurrentUser({
-        id: -1,
+        id: 0,
         name: "",
         email: "",
         image: "",
+        gender: "",
+        location: "",
+        birthday: "",
+        summary: "",
+        website: "",
+        instagram: "",
+        facebook: "",
+        twitter: "",
+        reddit: "",
+        tumblr: "",
+        pinterest: "",
+        work: "",
+        education: "",
       });
       setLogin(false);
     } catch (error) {

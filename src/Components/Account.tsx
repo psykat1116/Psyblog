@@ -6,6 +6,10 @@ import AuthContext, {
 } from "../Context/AuthContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { MdOutlineTransgender } from "react-icons/md";
+import { PiGenderIntersexBold, PiGenderNonbinaryBold } from "react-icons/pi";
+import { IoMale, IoFemale } from "react-icons/io5";
+import { Country, country } from "../Country";
 
 const Account = () => {
   const Navigate = useNavigate();
@@ -25,13 +29,14 @@ const Account = () => {
     twitter: false,
     reddit: false,
     tumblr: false,
+    pinterest: false,
     work: false,
     education: false,
   });
   const [userdata, setUserData] = useState<currentUser>({
-    id: currentuser.id,
-    name: currentuser.name,
-    email: currentuser.email,
+    id: 0,
+    name: "",
+    email: "",
     image: "",
     gender: "",
     location: "",
@@ -40,6 +45,7 @@ const Account = () => {
     website: "",
     instagram: "",
     facebook: "",
+    pinterest: "",
     twitter: "",
     reddit: "",
     tumblr: "",
@@ -56,9 +62,14 @@ const Account = () => {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
-    const target = e.target as HTMLInputElement | HTMLTextAreaElement;
+    const target = e.target as
+      | HTMLInputElement
+      | HTMLTextAreaElement
+      | HTMLSelectElement;
     setUserData({
       ...userdata,
       [target.name]: target.value as string,
@@ -74,17 +85,15 @@ const Account = () => {
       }
     }
     try {
-      await axios.put(
-        `/users/update/${target.name}`,
-        userdata[target.name as keyof currentUser]
-      );
+      await axios.put(`/users/update/${target.name}`, {
+        value: userdata[target.name as keyof currentUser],
+      });
+      const { data } = await axios.get("/users/getUser");
+      setCurrentUser(data);
+      localStorage.setItem("currentuser", JSON.stringify(data));
       setEdit({
         ...edit,
         [target.name]: !edit[target.name as keyof editUser],
-      });
-      setCurrentUser({
-        ...currentuser,
-        [target.name]: userdata[target.name as keyof currentUser],
       });
     } catch (error: any) {
       if (error.request.status === 401 || error.request.status === 403) {
@@ -95,6 +104,22 @@ const Account = () => {
     }
   };
 
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     try {
+  //       const { data } = await axios.get("/users/getUser");
+  //       setCurrentUser(data);
+  //     } catch (error: any) {
+  //       if (error.request.status === 401 || error.request.status === 403) {
+  //         alert("Please Login Again");
+  //         Navigate("/login");
+  //       }
+  //       console.log(error);
+  //     }
+  //   };
+  //   fetchUser();
+  // }, [edit]);
+
   return (
     <div className="account">
       <h2>Account</h2>
@@ -102,7 +127,7 @@ const Account = () => {
         <label htmlFor="name">Name</label>
         <div className="data">
           {!edit.name ? (
-            <p>{userdata.name}</p>
+            <p>{currentuser.name}</p>
           ) : (
             <input
               type="text"
@@ -135,7 +160,7 @@ const Account = () => {
         <label htmlFor="email">Email</label>
         <div className="data">
           {!edit.email ? (
-            <p>{userdata.email}</p>
+            <p>{currentuser.email}</p>
           ) : (
             <input
               type="email"
@@ -173,18 +198,32 @@ const Account = () => {
         <label htmlFor="gender">Gender</label>
         <div className="data">
           {!edit.gender ? (
-            <p>
-              {currentuser.gender !== null ? currentuser.gender : "Your Gender"}
-            </p>
+            <p>{currentuser.gender ? currentuser.gender : "Your Gender"}</p>
           ) : (
-            <input
-              type="text"
+            <select
               name="gender"
               id="gender"
-              placeholder="Your Gender"
               value={userdata.gender}
               onChange={handleChange}
-            />
+            >
+              <option value="Not Prefer To Say">Not Prefer To Say</option>
+              <option value="Male">
+                Male <IoMale />
+              </option>
+              <option value="Female">
+                Female <IoFemale />
+              </option>
+              <option value="Transgender">
+                Transgender <MdOutlineTransgender />
+              </option>
+              <option value="Intersex">
+                Intersex <PiGenderIntersexBold />
+              </option>
+              <option value="Non-Binary">
+                Non Binary <PiGenderNonbinaryBold />
+              </option>
+              <option value="Others">Others</option>
+            </select>
           )}
         </div>
         <div className="action">
@@ -214,14 +253,20 @@ const Account = () => {
                 : "Where Are You From?"}
             </p>
           ) : (
-            <input
-              type="text"
+            <select
               name="location"
               id="location"
-              placeholder="Where Are You From?"
               value={userdata.location}
               onChange={handleChange}
-            />
+            >
+              {country.map((country: Country) => {
+                return (
+                  <option key={country.code} value={country.name}>
+                    {country.name}
+                  </option>
+                );
+              })}
+            </select>
           )}
         </div>
         <div className="action">
@@ -493,6 +538,43 @@ const Account = () => {
           )}
         </div>
       </div>
+      <div className="pinterest">
+        <label htmlFor="pinterest">Pinterest</label>
+        <div className="data">
+          {!edit.pinterest ? (
+            <p>
+              {currentuser.pinterest
+                ? currentuser.pinterest
+                : "Your Pinterset Url"}
+            </p>
+          ) : (
+            <input
+              type="text"
+              name="pinterest"
+              id="pinterest"
+              placeholder="Your Pinterest Url"
+              value={userdata.pinterest}
+              onChange={handleChange}
+            />
+          )}
+        </div>
+        <div className="action">
+          {!edit.pinterest ? (
+            <button name="pinterest" onClick={handleEditMode}>
+              Edit
+            </button>
+          ) : (
+            <>
+              <button name="pinterest" onClick={updateData}>
+                Save
+              </button>
+              <button onClick={handleEditMode} name="pinterest">
+                Cancel
+              </button>
+            </>
+          )}
+        </div>
+      </div>
       <div className="tumblr">
         <label htmlFor="tumblr">Tumblr</label>
         <div className="data">
@@ -567,14 +649,14 @@ const Account = () => {
             <p>
               {currentuser.education
                 ? currentuser.education
-                : "Add Your College"}
+                : "Add Your School or College"}
             </p>
           ) : (
             <input
               type="text"
               name="education"
               id="education"
-              placeholder="Add Your College"
+              placeholder="Add Your School or College"
               value={userdata.education}
               onChange={handleChange}
             />

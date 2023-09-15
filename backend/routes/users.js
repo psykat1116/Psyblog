@@ -1,7 +1,8 @@
 import express from 'express';
 const router = express.Router();
-import {updateUserData} from '../controller/user.js';
+import { updateUserData, getUserData } from '../controller/user.js';
 
-router.put('/update/:field',updateUserData);
+router.put('/update/:field', updateUserData);
+router.get('/getUser', getUserData);
 
 export default router;

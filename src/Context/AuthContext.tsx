@@ -23,19 +23,20 @@ export type currentUser = {
   id: number;
   name: string;
   email: string;
-  image?: string;
-  gender?: string;
-  location?: string;
-  birthday?: string;
-  summary?: string;
-  website?: string;
-  instagram?: string;
-  facebook?: string;
-  twitter?: string;
-  reddit?: string;
-  tumblr?: string;
-  work?: string;
-  education?: string;
+  image: string;
+  gender: string;
+  location: string;
+  birthday: string;
+  summary: string;
+  website: string;
+  instagram: string;
+  facebook: string;
+  twitter: string;
+  reddit: string;
+  pinterest: string;
+  tumblr: string;
+  work: string;
+  education: string;
 };
 
 export type editUser = {
@@ -51,6 +52,7 @@ export type editUser = {
   twitter: boolean;
   reddit: boolean;
   tumblr: boolean;
+  pinterest: boolean;
   work: boolean;
   education: boolean;
 };

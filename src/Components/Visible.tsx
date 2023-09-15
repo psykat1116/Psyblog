@@ -14,7 +14,7 @@ const Visible = () => {
     const fetchPosts = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`/posts/${userID}/${visibility}`);
+        const response = await axios.get(`http://localhost:5000/api/posts/${userID}/${visibility}`);
         setPosts(response.data);
         setLoading(false);
       } catch (error: any) {

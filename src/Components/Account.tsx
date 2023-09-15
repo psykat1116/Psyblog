@@ -88,7 +88,7 @@ const Account = () => {
       await axios.put(`/users/update/${target.name}`, {
         value: userdata[target.name as keyof currentUser],
       });
-      const { data } = await axios.get("/users/getUser");
+      const { data } = await axios.get("http://localhost:5000/api/users/getUser");
       setCurrentUser(data);
       localStorage.setItem("currentuser", JSON.stringify(data));
       setEdit({
@@ -98,7 +98,7 @@ const Account = () => {
     } catch (error: any) {
       if (error.request.status === 401 || error.request.status === 403) {
         alert("Please Login Again");
-        Navigate("/login");
+        Navigate("http://localhost:5000/api/login");
       }
       console.log(error);
     }

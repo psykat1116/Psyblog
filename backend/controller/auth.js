@@ -10,7 +10,6 @@ db.connect((err) => {
 })
 
 export const register = async (req, res) => {
-    console.log(req.body);
     const q = "SELECT * FROM users WHERE email = ? OR name = ?";
     db.query(q, [req.body.email, req.body.name], async (err, result) => {
         if (err) {
@@ -52,14 +51,11 @@ export const login = async (req, res) => {
             return res.status(401).json({ isAuth: false, message: "Invalid email or password" });
         }
         const { password, ...others } = result[0];
-        const token = jwt.sign({ email: result[0].email, id: result[0].id }, process.env.JWT_SECRET_KEY, { expiresIn: "1day" });
-        res.cookie("token", token, { httpOnly: true }).status(200).json({ others });
+        const token = jwt.sign({ email: result[0].email, id: result[0].id }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
+        res.status(200).json({ others, token: token });
     });
 }
 
 export const logout = (req, res) => {
-    res.clearCookie("token", {
-        sameSite: "none",
-        secure: true
-    }).status(200).json({ message: "Logged out" });
+    res.status(200).json({ message: "Logged out" });
 }

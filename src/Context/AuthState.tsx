@@ -32,8 +32,9 @@ const AuthState = ({ children }: { children: React.ReactNode }) => {
 
   const logout = async () => {
     try {
-      await axios.post("/auth/logout");
+      await axios.post("http://localhost:5000/api/auth/logout");
       localStorage.removeItem("currentuser");
+      localStorage.removeItem("token");
       setCurrentUser({
         id: 0,
         name: "",

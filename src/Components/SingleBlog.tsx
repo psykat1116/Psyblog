@@ -49,9 +49,13 @@ const SingleBlog = () => {
 
   async function handleDelete() {
     try {
-      await axios.delete(`/posts/${blogID}`);
+      await axios.delete(`http://localhost:5000/api/posts/${blogID}`);
       Navigate("/");
-    } catch (error) {
+    } catch (error:any) {
+      if(error.request.status === 401 || error.request.status === 403){
+        alert("Please login to continue");
+        Navigate("/login");
+      }
       console.log(error);
     }
   }
@@ -59,7 +63,7 @@ const SingleBlog = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await axios.get(`/posts/${blogID}`);
+        const res = await axios.get(`http://localhost:5000/api/posts/${blogID}`);
         setSinglePost(res.data[0]);
       } catch (error) {
         console.log(error);
@@ -84,7 +88,7 @@ const SingleBlog = () => {
           <div className="main-blog">
             <div className="main-image-box">
               <img
-                src={`../uploads/${singlepost.image}`}
+                src={singlepost.image}
                 alt={singlepost.title}
               />
             </div>

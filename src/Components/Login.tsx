@@ -30,25 +30,28 @@ const Login = () => {
   async function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
     try {
-      const {email, password} = user;
-      const res = await axios.post("/auth/login", {email, password});
-      const data = await res.data.others;
-      localStorage.setItem("currentuser", JSON.stringify(data));
+      const { email, password } = user;
+      const res = await axios.post("http://localhost:5000/api/auth/login", {
+        email,
+        password,
+      });
+      const data = await res.data;
+      localStorage.setItem("currentuser", JSON.stringify(data.others));
+      localStorage.setItem("token", data.token);
       setCurrentUser(data);
       setLogin(true);
       Navigate("/");
     } catch (error: any) {
-      if(error.request.status === 401){
+      if (error.request.status === 401) {
         setError("Invalid Credentials");
-        setTimeout(()=>{
+        setTimeout(() => {
           setError("");
-        },1500)
-      }
-      else if(error.request.status === 500){
+        }, 1500);
+      } else if (error.request.status === 500) {
         setError("Server Error");
-        setTimeout(()=>{
+        setTimeout(() => {
           setError("");
-        },1500)
+        }, 1500);
       }
       // console.log(error.request.status);
     }

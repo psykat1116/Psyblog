@@ -1,5 +1,29 @@
 import { db } from '../dbconfig.js';
 import Jwt from 'jsonwebtoken';
+import { v2 as cloudinary } from 'cloudinary';
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+})
+
+export const uploadToCloud = ((req, res) => {
+    try {
+        const image = req.body.image;
+        const opts = {
+            overwrite: true,
+            invalidate: true,
+            resource_type: "auto"
+        }
+        cloudinary.uploader.upload(image, opts, (err, result) => {
+            if (err) console.log(err);
+            res.json(result.url);
+        });
+    } catch (error) {
+        console.log(error.message);
+    }
+});
 
 export const getAllPosts = ((req, res) => {
     const q = req.query.catagory !== undefined ? `SELECT * FROM posts WHERE catagory = ? AND visibility = "public" ` : `SELECT * FROM posts WHERE visibility = "public"`;
@@ -34,7 +58,7 @@ export const getPostBaseOnVisibility = ((req, res) => {
 });
 
 export const createPost = ((req, res) => {
-    const token = req.cookies.token;
+    const token = req.body.token;
     if (!token) {
         return res.status(401).json({ message: "You are not Authorized" });
     }
@@ -54,27 +78,18 @@ export const createPost = ((req, res) => {
 })
 
 export const deletePost = ((req, res) => {
-    const token = req.cookies.token;
-    if (!token) {
-        return res.status(401).json({ message: "You are not Authorized" });
-    }
-    Jwt.verify(token, process.env.JWT_SECRET_KEY, (err, userInfo) => {
-        if (err) {
-            return res.status(403).json({ message: "Token is not valid" });
+    const postId = req.params.id;
+    const q = "DELETE FROM posts WHERE `id` = ?";
+    db.query(q, [postId], (error, result) => {
+        if (error) {
+            req.status(403).json({ message: "You are not Authorized" });
         }
-        const postId = req.params.id;
-        const q = "DELETE FROM posts WHERE `id` = ? AND `uid` = ?";
-        db.query(q, [postId, userInfo.id], (error, result) => {
-            if (error) {
-                req.status(403).json({ message: "You are not Authorized" });
-            }
-            return res.status(200).json({ message: "Post deleted successfully" })
-        });
+        return res.status(200).json({ message: "Post deleted successfully" })
     });
 })
 
 export const updatePost = ((req, res) => {
-    const token = req.cookies.token;
+    const token = req.body.token;
     if (!token) {
         return res.status(401).json({ message: "You are not Authorized" });
     }

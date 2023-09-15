@@ -51,6 +51,5 @@
   "devDependencies": {
     "@types/dompurify": "^3.0.2",
     "sass": "^1.66.1"
-  },
-  "proxy": "http://localhost:5000/api/"
+  }
 }

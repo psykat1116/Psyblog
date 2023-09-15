@@ -9,6 +9,7 @@ import axios from "axios";
 import moment from "moment";
 
 const WriteBlog = () => {
+  axios.defaults.withCredentials = true;
   document.title = "Psyblog | Write Blog";
   const Navigate = useNavigate();
   const editor = useRef(null);
@@ -19,9 +20,7 @@ const WriteBlog = () => {
   const [draft, setDraft] = useState<boolean>(false);
   const [content, setContent] = useState<string>(state?.description || "");
   const [title, setTitle] = useState<string>(state?.title || "");
-  const [image, setImage] = useState<string>(
-    state ? `../uploads/${state.image}` : ""
-  );
+  const [image, setImage] = useState<string>(state ? state.image : "");
   const [visibility, setVisibility] = useState<string>(
     state?.visibility || "public"
   );
@@ -38,18 +37,25 @@ const WriteBlog = () => {
       return;
     }
     try {
-      await axios.post("/posts/new", {
+      await uploadFile();
+      await axios.post("http://localhost:5000/api/posts/new", {
         title: title,
         description: content,
         catagory: catagory,
-        image: await uploadFile(),
+        image: image,
         date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
         lastupdate: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
         visibility: draft === true ? "draft" : visibility,
+        token: localStorage.getItem("token"),
       });
+      Navigate("/");
     } catch (error: any) {
       console.log(error);
+      if (error.request.status === 413) {
+        alert("Image size is too large");
+      }
       if (error.request.status === 401 || error.request.status === 403) {
+        alert("Please login to continue");
         Navigate("/login");
       }
     }
@@ -61,11 +67,20 @@ const WriteBlog = () => {
       return;
     }
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const res = await axios.post("/upload", formData);
-      return res.data;
-    } catch (error) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = async () => {
+        const render = reader.result as string;
+        const res = await axios.post(
+          "http://localhost:5000/api/posts/uploadtocloud",
+          { image: render }
+        );
+        setImage(res.data);
+      };
+    } catch (error: any) {
+      if (error.request.status === 413) {
+        alert("Image size is too large");
+      }
       console.log(error);
     }
   };
@@ -95,12 +110,13 @@ const WriteBlog = () => {
   const handleUpdate = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
-      await axios.put(`/posts/${state.id}`, {
+      await axios.put(`http://localhost:5000/api/posts/${state.id}`, {
         title: title,
         description: content,
         catagory: catagory,
         lastupdate: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
         visibility: visibility,
+        token: localStorage.getItem("token"),
       });
       Navigate(`/blogs/${state.id}`);
     } catch (error: any) {

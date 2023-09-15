@@ -7,7 +7,7 @@ export type suggestBlog = {
   id: number;
   title: string;
   image: string;
-}
+};
 
 const SuggestBlog = ({ catagory }: { catagory: string }) => {
   const [blogs, setBlogs] = useState<suggestBlog[]>([]);
@@ -15,21 +15,23 @@ const SuggestBlog = ({ catagory }: { catagory: string }) => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const res = await axios.get(`/posts/?catagory=${catagory}`);
+        const res = await axios.get(
+          `http://localhost:5000/api/posts/?catagory=${catagory}`
+        );
         setBlogs(res.data.splice(0, 4));
       } catch (error: any) {
         console.log(error.message);
       }
     };
     fetchBlogs();
-  },[catagory]);
+  }, [catagory]);
 
   return (
     <div className="suggest-posts">
       {blogs.map((blog) => {
         return (
           <div className="suggest" key={blog.id}>
-            <img src={`../uploads/${blog.image}`} alt={blog.title} />
+            <img src={blog.image} alt={blog.title} />
             <h3>{blog.title}</h3>
             <Link to={`/blogs/${blog.id}`}>
               <button>
@@ -37,7 +39,7 @@ const SuggestBlog = ({ catagory }: { catagory: string }) => {
               </button>
             </Link>
           </div>
-        )
+        );
       })}
     </div>
   );

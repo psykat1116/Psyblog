@@ -26,7 +26,7 @@ const BlogList = ({ post }: BlogProps) => {
         </Link>
       </div>
       <div className="image-box">
-        <img src={`${process.env.PUBLIC_URL}/uploads/${image}`} alt={title} />
+        <img src={image} alt={title} />
       </div>
     </div>
   );

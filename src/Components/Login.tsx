@@ -32,7 +32,7 @@ const Login = () => {
     try {
       const {email, password} = user;
       const res = await axios.post("/auth/login", {email, password});
-      const data = await res.data;
+      const data = await res.data.others;
       localStorage.setItem("currentuser", JSON.stringify(data));
       setCurrentUser(data);
       setLogin(true);

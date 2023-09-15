@@ -1,41 +1,167 @@
-import React from "react";
+import React, { useContext, useState } from "react";
+import AuthContext, {
+  AuthContextType,
+  editUser,
+  currentUser,
+} from "../Context/AuthContext";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Account = () => {
+  const Navigate = useNavigate();
+  const { currentuser, setCurrentUser } = useContext(
+    AuthContext
+  ) as AuthContextType;
+  const [edit, setEdit] = useState<editUser>({
+    name: false,
+    email: false,
+    gender: false,
+    location: false,
+    birthday: false,
+    summary: false,
+    website: false,
+    instagram: false,
+    facebook: false,
+    twitter: false,
+    reddit: false,
+    tumblr: false,
+    work: false,
+    education: false,
+  });
+  const [userdata, setUserData] = useState<currentUser>({
+    id: currentuser.id,
+    name: currentuser.name,
+    email: currentuser.email,
+    image: "",
+    gender: "",
+    location: "",
+    birthday: "",
+    summary: "",
+    website: "",
+    instagram: "",
+    facebook: "",
+    twitter: "",
+    reddit: "",
+    tumblr: "",
+    work: "",
+    education: "",
+  });
+
+  const handleEditMode = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const target = e.target as HTMLButtonElement;
+    setEdit({
+      ...edit,
+      [target.name]: !edit[target.name as keyof editUser],
+    });
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const target = e.target as HTMLInputElement | HTMLTextAreaElement;
+    setUserData({
+      ...userdata,
+      [target.name]: target.value as string,
+    });
+  };
+
+  const updateData = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    const target = e.target as HTMLButtonElement;
+    if (target.name === "name" || target.name === "email") {
+      if (userdata[target.name as keyof currentUser] === "") {
+        alert(`${target.name} cannot be empty`);
+        return;
+      }
+    }
+    try {
+      await axios.put(
+        `/users/update/${target.name}`,
+        userdata[target.name as keyof currentUser]
+      );
+      setEdit({
+        ...edit,
+        [target.name]: !edit[target.name as keyof editUser],
+      });
+      setCurrentUser({
+        ...currentuser,
+        [target.name]: userdata[target.name as keyof currentUser],
+      });
+    } catch (error: any) {
+      if (error.request.status === 401 || error.request.status === 403) {
+        alert("Please Login Again");
+        Navigate("/login");
+      }
+      console.log(error);
+    }
+  };
+
   return (
     <div className="account">
       <h2>Account</h2>
-      <div className="username">
-        <label htmlFor="username">Username</label>
+      <div className="name">
+        <label htmlFor="name">Name</label>
         <div className="data">
-          <p></p>
-          <input
-            type="text"
-            name="username"
-            id="username"
-            placeholder="Your Name"
-          />
+          {!edit.name ? (
+            <p>{userdata.name}</p>
+          ) : (
+            <input
+              type="text"
+              name="name"
+              id="name"
+              placeholder="Your Name"
+              value={userdata.name}
+              onChange={handleChange}
+            />
+          )}
         </div>
         <div className="action">
-          <button>Edit</button>
-          <button>Save</button>
-          <button>Cancel</button>
+          {!edit.name ? (
+            <button onClick={handleEditMode} name="name">
+              Edit
+            </button>
+          ) : (
+            <>
+              <button onClick={updateData} name="name">
+                Save
+              </button>
+              <button onClick={handleEditMode} name="name">
+                Cancel
+              </button>
+            </>
+          )}
         </div>
       </div>
       <div className="email">
         <label htmlFor="email">Email</label>
         <div className="data">
-          <p></p>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            placeholder="Your Email"
-          />
+          {!edit.email ? (
+            <p>{userdata.email}</p>
+          ) : (
+            <input
+              type="email"
+              name="email"
+              id="email"
+              placeholder="Your Email"
+              value={userdata.email}
+              onChange={handleChange}
+            />
+          )}
         </div>
         <div className="action">
-          <button>Edit</button>
-          <button>Save</button>
-          <button>Cancel</button>
+          {!edit.email ? (
+            <button name="email" onClick={handleEditMode}>
+              Edit
+            </button>
+          ) : (
+            <>
+              <button name="email" onClick={updateData}>
+                Save
+              </button>
+              <button onClick={handleEditMode} name="email">
+                Cancel
+              </button>
+            </>
+          )}
         </div>
       </div>
       <div className="password">
@@ -46,201 +172,429 @@ const Account = () => {
       <div className="gender">
         <label htmlFor="gender">Gender</label>
         <div className="data">
-          <p></p>
-          <input
-            type="text"
-            name="gender"
-            id="gender"
-            placeholder="Your Gender"
-          />
+          {!edit.gender ? (
+            <p>
+              {currentuser.gender !== null ? currentuser.gender : "Your Gender"}
+            </p>
+          ) : (
+            <input
+              type="text"
+              name="gender"
+              id="gender"
+              placeholder="Your Gender"
+              value={userdata.gender}
+              onChange={handleChange}
+            />
+          )}
         </div>
         <div className="action">
-          <button>Edit</button>
-          <button>Save</button>
-          <button>Cancel</button>
+          {!edit.gender ? (
+            <button name="gender" onClick={handleEditMode}>
+              Edit
+            </button>
+          ) : (
+            <>
+              <button name="gender" onClick={updateData}>
+                Save
+              </button>
+              <button onClick={handleEditMode} name="gender">
+                Cancel
+              </button>
+            </>
+          )}
         </div>
       </div>
       <div className="location">
         <label htmlFor="location">Location</label>
         <div className="data">
-          <p></p>
-          <input
-            type="text"
-            name="location"
-            id="location"
-            placeholder="Where Are You From?"
-          />
+          {!edit.location ? (
+            <p>
+              {currentuser.location
+                ? currentuser.location
+                : "Where Are You From?"}
+            </p>
+          ) : (
+            <input
+              type="text"
+              name="location"
+              id="location"
+              placeholder="Where Are You From?"
+              value={userdata.location}
+              onChange={handleChange}
+            />
+          )}
         </div>
         <div className="action">
-          <button>Edit</button>
-          <button>Save</button>
-          <button>Cancel</button>
+          {!edit.location ? (
+            <button name="location" onClick={handleEditMode}>
+              Edit
+            </button>
+          ) : (
+            <>
+              <button name="location" onClick={updateData}>
+                Save
+              </button>
+              <button onClick={handleEditMode} name="location">
+                Cancel
+              </button>
+            </>
+          )}
         </div>
       </div>
       <div className="birthday">
         <label htmlFor="birthday">Birthday</label>
         <div className="data">
-          <p></p>
-          <input type="date" name="birthday" id="birthday" />
+          {!edit.birthday ? (
+            <p>
+              {currentuser.birthday
+                ? currentuser.birthday
+                : "Your Date Of Birth"}
+            </p>
+          ) : (
+            <input
+              type="date"
+              name="birthday"
+              id="birthday"
+              value={userdata.birthday}
+              onChange={handleChange}
+            />
+          )}
         </div>
         <div className="action">
-          <button>Edit</button>
-          <button>Save</button>
-          <button>Cancel</button>
+          {!edit.birthday ? (
+            <button name="birthday" onClick={handleEditMode}>
+              Edit
+            </button>
+          ) : (
+            <>
+              <button name="birthday" onClick={updateData}>
+                Save
+              </button>
+              <button onClick={handleEditMode} name="birthday">
+                Cancel
+              </button>
+            </>
+          )}
         </div>
       </div>
       <div className="summary">
         <label htmlFor="">Summary</label>
         <div className="data">
-          <p></p>
-          <textarea
-            name="birthday"
-            id="birthday"
-            placeholder="Tell us about youself (Interset, Experience, etc)"
-          />
+          {!edit.summary ? (
+            <p>
+              {currentuser.summary
+                ? currentuser.summary
+                : "Tell us about youself (Interest, Experience, etc)"}
+            </p>
+          ) : (
+            <textarea
+              name="summary"
+              id="summary"
+              placeholder="Tell us about youself (Interest, Experience, etc)"
+              value={userdata.summary}
+              onChange={handleChange}
+            />
+          )}
         </div>
         <div className="action">
-          <button>Edit</button>
-          <button>Save</button>
-          <button>Cancel</button>
+          {!edit.summary ? (
+            <button name="summary" onClick={handleEditMode}>
+              Edit
+            </button>
+          ) : (
+            <>
+              <button name="summary" onClick={updateData}>
+                Save
+              </button>
+              <button onClick={handleEditMode} name="summary">
+                Cancel
+              </button>
+            </>
+          )}
         </div>
       </div>
       <h2>Social-Media</h2>
       <div className="website">
         <label htmlFor="website">Website</label>
         <div className="data">
-          <p></p>
-          <input
-            type="text"
-            name="website"
-            id="website"
-            placeholder="Your blog, portfolio, etc."
-          />
+          {!edit.website ? (
+            <p>
+              {currentuser.website
+                ? currentuser.website
+                : "Your blog, portfolio, etc."}
+            </p>
+          ) : (
+            <input
+              type="text"
+              name="website"
+              id="website"
+              placeholder="Your blog, portfolio, etc."
+              value={userdata.website}
+              onChange={handleChange}
+            />
+          )}
         </div>
         <div className="action">
-          <button>Edit</button>
-          <button>Save</button>
-          <button>Cancel</button>
+          {!edit.website ? (
+            <button name="website" onClick={handleEditMode}>
+              Edit
+            </button>
+          ) : (
+            <>
+              <button name="website" onClick={updateData}>
+                Save
+              </button>
+              <button onClick={handleEditMode} name="website">
+                Cancel
+              </button>
+            </>
+          )}
         </div>
       </div>
       <div className="instagram">
         <label htmlFor="instagram">Instagram</label>
         <div className="data">
-          <p></p>
-          <input
-            type="text"
-            name="instagram"
-            id="instagram"
-            placeholder="Your Instagram Url"
-          />
+          {!edit.instagram ? (
+            <p>
+              {currentuser.instagram
+                ? currentuser.instagram
+                : "Your Instagram Url"}
+            </p>
+          ) : (
+            <input
+              type="text"
+              name="instagram"
+              id="instagram"
+              placeholder="Your Instagram Url"
+              value={userdata.instagram}
+              onChange={handleChange}
+            />
+          )}
         </div>
         <div className="action">
-          <button>Edit</button>
-          <button>Save</button>
-          <button>Cancel</button>
+          {!edit.instagram ? (
+            <button name="instagram" onClick={handleEditMode}>
+              Edit
+            </button>
+          ) : (
+            <>
+              <button name="instagram" onClick={updateData}>
+                Save
+              </button>
+              <button onClick={handleEditMode} name="instagram">
+                Cancel
+              </button>
+            </>
+          )}
         </div>
       </div>
       <div className="facebook">
         <label htmlFor="facebook">Facebook</label>
         <div className="data">
-          <p></p>
-          <input
-            type="text"
-            name="facebook"
-            id="facebook"
-            placeholder="Your Facebook Url"
-          />
+          {!edit.facebook ? (
+            <p>
+              {currentuser.facebook
+                ? currentuser.facebook
+                : "Your Facebook Url"}
+            </p>
+          ) : (
+            <input
+              type="text"
+              name="facebook"
+              id="facebook"
+              placeholder="Your Facebook Url"
+              value={userdata.facebook}
+              onChange={handleChange}
+            />
+          )}
         </div>
         <div className="action">
-          <button>Edit</button>
-          <button>Save</button>
-          <button>Cancel</button>
+          {!edit.facebook ? (
+            <button name="facebook" onClick={handleEditMode}>
+              Edit
+            </button>
+          ) : (
+            <>
+              <button name="facebook" onClick={updateData}>
+                Save
+              </button>
+              <button onClick={handleEditMode} name="facebook">
+                Cancel
+              </button>
+            </>
+          )}
         </div>
       </div>
       <div className="twitter">
         <label htmlFor="twitter">Twitter</label>
         <div className="data">
-          <p></p>
-          <input
-            type="text"
-            name="twitter"
-            id="twitter"
-            placeholder="Your Twitter Url"
-          />
+          {!edit.twitter ? (
+            <p>
+              {currentuser.twitter ? currentuser.twitter : "Your Twitter Url"}
+            </p>
+          ) : (
+            <input
+              type="text"
+              name="twitter"
+              id="twitter"
+              placeholder="Your Twitter Url"
+              value={userdata.twitter}
+              onChange={handleChange}
+            />
+          )}
         </div>
         <div className="action">
-          <button>Edit</button>
-          <button>Save</button>
-          <button>Cancel</button>
+          {!edit.twitter ? (
+            <button name="twitter" onClick={handleEditMode}>
+              Edit
+            </button>
+          ) : (
+            <>
+              <button name="twitter" onClick={updateData}>
+                Save
+              </button>
+              <button onClick={handleEditMode} name="twitter">
+                Cancel
+              </button>
+            </>
+          )}
         </div>
       </div>
       <div className="reddit">
         <label htmlFor="reddit">Reddit</label>
         <div className="data">
-          <p></p>
-          <input
-            type="text"
-            name="reddit"
-            id="reddit"
-            placeholder="Your Reddit Url"
-          />
+          {!edit.reddit ? (
+            <p>{currentuser.reddit ? currentuser.reddit : "Your Reddit Url"}</p>
+          ) : (
+            <input
+              type="text"
+              name="reddit"
+              id="reddit"
+              placeholder="Your Reddit Url"
+              value={userdata.reddit}
+              onChange={handleChange}
+            />
+          )}
         </div>
         <div className="action">
-          <button>Edit</button>
-          <button>Save</button>
-          <button>Cancel</button>
+          {!edit.reddit ? (
+            <button name="reddit" onClick={handleEditMode}>
+              Edit
+            </button>
+          ) : (
+            <>
+              <button name="reddit" onClick={updateData}>
+                Save
+              </button>
+              <button onClick={handleEditMode} name="reddit">
+                Cancel
+              </button>
+            </>
+          )}
         </div>
       </div>
       <div className="tumblr">
         <label htmlFor="tumblr">Tumblr</label>
         <div className="data">
-          <p></p>
-          <input
-            type="text"
-            name="tumblr"
-            id="tumblr"
-            placeholder="Your Tumblr Url"
-          />
+          {!edit.tumblr ? (
+            <p>{currentuser.tumblr ? currentuser.tumblr : "Your Tumblr Url"}</p>
+          ) : (
+            <input
+              type="text"
+              name="tumblr"
+              id="tumblr"
+              placeholder="Your Tumblr Url"
+              value={userdata.tumblr}
+              onChange={handleChange}
+            />
+          )}
         </div>
         <div className="action">
-          <button>Edit</button>
-          <button>Save</button>
-          <button>Cancel</button>
+          {!edit.tumblr ? (
+            <button name="tumblr" onClick={handleEditMode}>
+              Edit
+            </button>
+          ) : (
+            <>
+              <button name="tumblr" onClick={updateData}>
+                Save
+              </button>
+              <button onClick={handleEditMode} name="tumblr">
+                Cancel
+              </button>
+            </>
+          )}
         </div>
       </div>
       <h2>Experience</h2>
       <div className="work">
         <label htmlFor="work">Work</label>
         <div className="data">
-          <p></p>
-          <input
-            type="text"
-            name="work"
-            id="work"
-            placeholder="Add A Workplace"
-          />
+          {!edit.work ? (
+            <p>{currentuser.work ? currentuser.work : "Add A Workplace"}</p>
+          ) : (
+            <input
+              type="text"
+              name="work"
+              id="work"
+              placeholder="Add A Workplace"
+              value={userdata.work}
+              onChange={handleChange}
+            />
+          )}
         </div>
         <div className="action">
-          <button>Edit</button>
-          <button>Save</button>
-          <button>Cancel</button>
+          {!edit.work ? (
+            <button name="work" onClick={handleEditMode}>
+              Edit
+            </button>
+          ) : (
+            <>
+              <button name="work" onClick={updateData}>
+                Save
+              </button>
+              <button onClick={handleEditMode} name="work">
+                Cancel
+              </button>
+            </>
+          )}
         </div>
       </div>
       <div className="education">
         <label htmlFor="education">Education</label>
         <div className="data">
-          <p></p>
-          <input
-            type="text"
-            name="education"
-            id="education"
-            placeholder="Add Your College"
-          />
+          {!edit.education ? (
+            <p>
+              {currentuser.education
+                ? currentuser.education
+                : "Add Your College"}
+            </p>
+          ) : (
+            <input
+              type="text"
+              name="education"
+              id="education"
+              placeholder="Add Your College"
+              value={userdata.education}
+              onChange={handleChange}
+            />
+          )}
         </div>
         <div className="action">
-          <button>Edit</button>
-          <button>Save</button>
-          <button>Cancel</button>
+          {!edit.education ? (
+            <button name="education" onClick={handleEditMode}>
+              Edit
+            </button>
+          ) : (
+            <>
+              <button name="education" onClick={updateData}>
+                Save
+              </button>
+              <button onClick={handleEditMode} name="education">
+                Cancel
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>

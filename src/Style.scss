@@ -761,6 +761,7 @@
             box-shadow: 10px 10px 10px rgba($color: #000000, $alpha: 0.4);
             backdrop-filter: blur(20px);
             border-radius: 7px;
+            border: 1px solid #fff;
             padding: 10px;
             .left {
               width: 50%;
@@ -888,10 +889,11 @@
             justify-content: flex-start;
             align-items: flex-start;
             border-radius: 7px;
-            box-shadow: 10px 10px 10px rgba($color: #000000, $alpha: 0.3);
+            box-shadow: 10px 10px 10px rgba($color: #000000, $alpha: 0.4);
             background-color: rgba($color: #000000, $alpha: 0.4);
+            border: 1px solid #fff;
             backdrop-filter: blur(20px);
-            h2{
+            h2 {
               font-family: "Satisfy", cursive;
             }
             div {
@@ -913,6 +915,9 @@
                 display: flex;
                 justify-content: flex-start;
                 align-items: center;
+                p{
+                  color: #bcdbb5;
+                }
                 input,
                 select,
                 textarea {
@@ -938,7 +943,7 @@
                     color: #d4bfbf;
                   }
                 }
-                input[type="date"]::-webkit-calendar-picker-indicator{
+                input[type="date"]::-webkit-calendar-picker-indicator {
                   cursor: pointer;
                   filter: invert(1);
                 }
@@ -956,12 +961,17 @@
                   background-color: transparent;
                   color: #fff;
                   border-radius: 4px;
+                  transition: all 0.2s ease-in-out;
+                  &:hover {
+                    background-color: #fff;
+                    color: #000;
+                  }
                 }
               }
             }
             :nth-child(4) {
               padding-bottom: 15px;
-              button{
+              button {
                 width: 10rem;
                 padding: 10px;
                 margin-left: 10px;
@@ -971,6 +981,11 @@
                 font-size: 14px;
                 color: #fff;
                 border-radius: 3px;
+                transition: all 0.2s ease-in-out;
+                &:hover {
+                  background-color: #fff;
+                  color: #000;
+                }
               }
             }
           }

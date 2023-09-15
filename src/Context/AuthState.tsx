@@ -26,7 +26,6 @@ const AuthState = ({ children }: { children: React.ReactNode }) => {
         name: "",
         email: "",
         image: "",
-        isAuth: false,
       });
       setLogin(false);
     } catch (error) {

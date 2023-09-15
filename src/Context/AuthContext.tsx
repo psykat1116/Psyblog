@@ -23,9 +23,37 @@ export type currentUser = {
   id: number;
   name: string;
   email: string;
-  image: string | null;
-  isAuth: boolean;
-}
+  image?: string;
+  gender?: string;
+  location?: string;
+  birthday?: string;
+  summary?: string;
+  website?: string;
+  instagram?: string;
+  facebook?: string;
+  twitter?: string;
+  reddit?: string;
+  tumblr?: string;
+  work?: string;
+  education?: string;
+};
+
+export type editUser = {
+  name: boolean;
+  email: boolean;
+  gender: boolean;
+  location: boolean;
+  birthday: boolean;
+  summary: boolean;
+  website: boolean;
+  instagram: boolean;
+  facebook: boolean;
+  twitter: boolean;
+  reddit: boolean;
+  tumblr: boolean;
+  work: boolean;
+  education: boolean;
+};
 
 export type AuthContextType = {
   currentuser: currentUser;

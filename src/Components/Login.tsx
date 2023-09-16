@@ -38,7 +38,7 @@ const Login = () => {
       const data = await res.data;
       localStorage.setItem("currentuser", JSON.stringify(data.others));
       localStorage.setItem("token", data.token);
-      setCurrentUser(data);
+      setCurrentUser(data.others);
       setLogin(true);
       Navigate("/");
     } catch (error: any) {
@@ -70,6 +70,8 @@ const Login = () => {
               id="email"
               name="email"
               onChange={handleChange}
+              autoComplete="on"
+              autoFocus={true}
             />
           </div>
           <div className="password-box">
@@ -80,6 +82,7 @@ const Login = () => {
               id="password"
               name="password"
               onChange={handleChange}
+              autoComplete="on"
             />
           </div>
         </form>

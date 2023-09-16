@@ -85,12 +85,15 @@ const Account = () => {
       }
     }
     try {
-      await axios.put(`/users/update/${target.name}`, {
+      await axios.put(`http://localhost:5000/api/users/update/${target.name}`, {
         value: userdata[target.name as keyof currentUser],
+        token: localStorage.getItem("token"),
       });
-      const { data } = await axios.get("http://localhost:5000/api/users/getUser");
-      setCurrentUser(data);
-      localStorage.setItem("currentuser", JSON.stringify(data));
+      const res = await axios.get("http://localhost:5000/api/users/getUser", {
+        headers: { auth_token: localStorage.getItem("token") },
+      });
+      setCurrentUser(res.data);
+      localStorage.setItem("currentuser", JSON.stringify(res.data));
       setEdit({
         ...edit,
         [target.name]: !edit[target.name as keyof editUser],
@@ -98,7 +101,7 @@ const Account = () => {
     } catch (error: any) {
       if (error.request.status === 401 || error.request.status === 403) {
         alert("Please Login Again");
-        Navigate("http://localhost:5000/api/login");
+        Navigate("/login");
       }
       console.log(error);
     }

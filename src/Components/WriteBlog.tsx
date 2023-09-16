@@ -8,6 +8,11 @@ import { AiOutlineCloudUpload } from "react-icons/ai";
 import axios from "axios";
 import moment from "moment";
 
+// type uploadImg = {
+//   url: string;
+//   id: string;
+// }
+
 const WriteBlog = () => {
   axios.defaults.withCredentials = true;
   document.title = "Psyblog | Write Blog";
@@ -27,22 +32,34 @@ const WriteBlog = () => {
   const [file, setFile] = useState<File | null>(null);
   const [catagory, setCatagory] = useState<string>(state?.catagory || "art");
 
+  const imagetoBase64 = (file: File) => {
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        resolve(reader.result as string);
+      };
+      reader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
+
   const handleSubmit = async () => {
     if (!title || !content) {
       alert("Please fill all the fields");
       return;
     }
-    if (file === null) {
+    if (file === null || file === undefined) {
       alert("Please select an image");
       return;
     }
     try {
-      await uploadFile();
       await axios.post("http://localhost:5000/api/posts/new", {
         title: title,
         description: content,
         catagory: catagory,
-        image: image,
+        image: await imagetoBase64(file),
         date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
         lastupdate: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
         visibility: draft === true ? "draft" : visibility,
@@ -61,30 +78,6 @@ const WriteBlog = () => {
     }
   };
 
-  const uploadFile = async () => {
-    if (file === null) {
-      alert("Please select an image");
-      return;
-    }
-    try {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = async () => {
-        const render = reader.result as string;
-        const res = await axios.post(
-          "http://localhost:5000/api/posts/uploadtocloud",
-          { image: render }
-        );
-        setImage(res.data);
-      };
-    } catch (error: any) {
-      if (error.request.status === 413) {
-        alert("Image size is too large");
-      }
-      console.log(error);
-    }
-  };
-
   const openFile = () => {
     let file = document.getElementById("main-image") as HTMLInputElement;
     file.click();
@@ -93,8 +86,15 @@ const WriteBlog = () => {
   const updateFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
       if (e.target.files) {
-        setFile(e.target.files[0]);
-        setImage(URL.createObjectURL(e.target.files[0]));
+        if (e.target.files[0] !== undefined) {
+          setFile(e.target.files[0]);
+          setImage(URL.createObjectURL(e.target.files[0]));
+        } else {
+          alert("Please select an image");
+          return;
+        }
+      } else {
+        alert("Please select an image");
       }
     } catch (error) {
       console.log(error);

@@ -7,23 +7,27 @@ cloudinary.config({
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET
 })
+const opts = {
+    overwrite: true,
+    invalidate: true,
+    resource_type: "auto"
+};
 
-export const uploadToCloud = ((req, res) => {
+export const deleteFromCloud = (req, res) => {
     try {
         const image = req.body.image;
         const opts = {
-            overwrite: true,
             invalidate: true,
             resource_type: "auto"
         }
-        cloudinary.uploader.upload(image, opts, (err, result) => {
+        cloudinary.uploader.destroy(image, opts, (err, result) => {
             if (err) console.log(err);
-            res.json(result.url);
+            res.json(result).status;
         });
     } catch (error) {
         console.log(error.message);
     }
-});
+}
 
 export const getAllPosts = ((req, res) => {
     const q = req.query.catagory !== undefined ? `SELECT * FROM posts WHERE catagory = ? AND visibility = "public" ` : `SELECT * FROM posts WHERE visibility = "public"`;
@@ -62,17 +66,23 @@ export const createPost = ((req, res) => {
     if (!token) {
         return res.status(401).json({ message: "You are not Authorized" });
     }
-    Jwt.verify(token, process.env.JWT_SECRET_KEY, (err, userInfo) => {
+    Jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, userInfo) => {
         if (err) {
             return res.status(403).json({ message: "Token is not valid" });
         }
-        const q = "INSERT INTO posts (`uid`,`title`,`image`,`description`,`catagory`,`date`,`lastupdate`,`visibility`) VALUES (?)";
-        const value = [userInfo.id, req.body.title, req.body.image, req.body.description, req.body.catagory, req.body.date, req.body.lastupdate, req.body.visibility]
-        db.query(q, [value], (error, result) => {
-            if (error) {
-                return res.status(500).json(error);
+        const image = req.body.image;
+        await cloudinary.uploader.upload(image, opts, (err, result) => {
+            if (err) {
+                return res.status(413).json({ error: err.message });
             }
-            return res.status(200).json({ message: "Post created successfully" });
+            const q = "INSERT INTO posts (`uid`,`title`,`image`,`description`,`catagory`,`date`,`lastupdate`,`visibility`,`imageid`) VALUES (?)";
+            const value = [userInfo.id, req.body.title, result.url, req.body.description, req.body.catagory, req.body.date, req.body.lastupdate, req.body.visibility, result.public_id];
+            db.query(q, [value], (error, result) => {
+                if (error) {
+                    return res.status(500).json(error);
+                }
+                return res.status(200).json({ message: "Post created successfully" });
+            });
         });
     });
 })

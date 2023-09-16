@@ -17,6 +17,7 @@ import {
   MdPublic,
   MdOutlineLogout,
   MdOutlineDrafts,
+  MdDraw,
 } from "react-icons/md";
 import { RiGitRepositoryPrivateLine } from "react-icons/ri";
 import { BiUserCircle } from "react-icons/bi";
@@ -39,7 +40,7 @@ const Profile = () => {
       }
     }
     //eslint-disable-next-line
-  },[search,urlID,length,currentuser]);
+  }, [search, urlID, length, currentuser]);
 
   return (
     <div id="profile">
@@ -99,6 +100,10 @@ const Profile = () => {
               </button>
             </>
           )}
+          <Link to={`/write`}>
+            <MdDraw className="icon" />
+            New Blog
+          </Link>
         </div>
       </div>
       <div className="in-details">

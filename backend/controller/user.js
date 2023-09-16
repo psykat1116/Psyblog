@@ -3,7 +3,7 @@ import Jwt from 'jsonwebtoken';
 
 export const updateUserData = ((req, res) => {
     const field = req.params.field;
-    const token = req.cookies.token;
+    const token = req.body.token;
     if (!token) {
         return res.status(401).json({ message: "You are not Authorized" });
     }
@@ -22,7 +22,7 @@ export const updateUserData = ((req, res) => {
 });
 
 export const getUserData = ((req, res) => {
-    const token = req.cookies.token;
+    const token = req.get("auth_token");
     if (!token) {
         return res.status(401).json({ message: "You are not Authorized" });
     }

@@ -135,20 +135,21 @@ const Account = () => {
               placeholder="Your Name"
               value={userdata.name}
               onChange={handleChange}
+              hidden
             />
           )}
         </div>
         <div className="action">
           {!edit.name ? (
-            <button onClick={handleEditMode} name="name">
+            <button onClick={handleEditMode} name="name" hidden>
               Edit
             </button>
           ) : (
             <>
-              <button onClick={updateData} name="name">
+              <button onClick={updateData} name="name" hidden>
                 Save
               </button>
-              <button onClick={handleEditMode} name="name">
+              <button onClick={handleEditMode} name="name" hidden>
                 Cancel
               </button>
             </>
@@ -168,20 +169,21 @@ const Account = () => {
               placeholder="Your Email"
               value={userdata.email}
               onChange={handleChange}
+              hidden
             />
           )}
         </div>
         <div className="action">
           {!edit.email ? (
-            <button name="email" onClick={handleEditMode}>
+            <button name="email" onClick={handleEditMode} hidden>
               Edit
             </button>
           ) : (
             <>
-              <button name="email" onClick={updateData}>
+              <button name="email" onClick={updateData} hidden>
                 Save
               </button>
-              <button onClick={handleEditMode} name="email">
+              <button onClick={handleEditMode} name="email" hidden>
                 Cancel
               </button>
             </>

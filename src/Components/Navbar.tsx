@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import image from "../image/logo.png";
 import { HiOutlineLogin, HiPencilAlt } from "react-icons/hi";
@@ -9,9 +9,6 @@ import { useNavigate } from "react-router-dom";
 const Navbar = () => {
   const Navigate = useNavigate();
   const { isLogin, currentuser } = useContext(AuthContext) as AuthContextType;
-  const [src, setSrc] = useState<string>(
-    currentuser.image ? currentuser.image : placeholder
-  );
 
   function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
     if (e.target.value === "all") {
@@ -53,7 +50,7 @@ const Navbar = () => {
           <>
             <span id="user">
               <Link to={`/profile/${currentuser.id}`}>
-                <img src={src} className="icon" alt="profile" />
+                <img src={placeholder} className="icon" alt="profile" />
               </Link>
             </span>
           </>

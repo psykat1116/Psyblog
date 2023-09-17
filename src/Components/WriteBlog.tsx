@@ -8,11 +8,6 @@ import { AiOutlineCloudUpload } from "react-icons/ai";
 import axios from "axios";
 import moment from "moment";
 
-// type uploadImg = {
-//   url: string;
-//   id: string;
-// }
-
 const WriteBlog = () => {
   axios.defaults.withCredentials = true;
   document.title = "Psyblog | Write Blog";
@@ -55,7 +50,7 @@ const WriteBlog = () => {
       return;
     }
     try {
-      await axios.post("http://localhost:5000/api/posts/new", {
+      const response = await axios.post("http://localhost:5000/api/posts/new", {
         title: title,
         description: content,
         catagory: catagory,
@@ -65,12 +60,13 @@ const WriteBlog = () => {
         visibility: draft === true ? "draft" : visibility,
         token: localStorage.getItem("token"),
       });
+      if (response.status === 413) {
+        alert("Image size is too large");
+        return;
+      }
       Navigate("/");
     } catch (error: any) {
-      console.log(error);
-      if (error.request.status === 413) {
-        alert("Image size is too large");
-      }
+      console.log(error.message);
       if (error.request.status === 401 || error.request.status === 403) {
         alert("Please login to continue");
         Navigate("/login");
@@ -159,7 +155,10 @@ const WriteBlog = () => {
                   ) : file ? (
                     <img src={image} alt="placeholder" />
                   ) : (
-                    <AiOutlineCloudUpload className="icon" />
+                    <div id="show-img">
+                      <AiOutlineCloudUpload className="icon" />
+                      <p>Image Size should be less than 500KB</p>
+                    </div>
                   )}
                 </div>
               )}

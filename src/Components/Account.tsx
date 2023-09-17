@@ -22,6 +22,7 @@ const Account = () => {
     gender: false,
     location: false,
     birthday: false,
+    image: false,
     summary: false,
     website: false,
     instagram: false,
@@ -107,21 +108,16 @@ const Account = () => {
     }
   };
 
-  // useEffect(() => {
-  //   const fetchUser = async () => {
-  //     try {
-  //       const { data } = await axios.get("/users/getUser");
-  //       setCurrentUser(data);
-  //     } catch (error: any) {
-  //       if (error.request.status === 401 || error.request.status === 403) {
-  //         alert("Please Login Again");
-  //         Navigate("/login");
-  //       }
-  //       console.log(error);
+  // const openFile = () => {
+  //   const input = document.getElementById("profile-img") as HTMLInputElement;
+  //   input.click();
+  //   input.addEventListener("change", (e) => {
+  //     const target = e.target as HTMLInputElement;
+  //     if (target.files) {
+  //       setFile(target.files[0]);
   //     }
-  //   };
-  //   fetchUser();
-  // }, [edit]);
+  //   });
+  // };
 
   return (
     <div className="account">
@@ -196,6 +192,34 @@ const Account = () => {
         <label htmlFor="password">Password</label>
         <button>Change Password</button>
       </div>
+      {/* <div className="profile-picture">
+        <label htmlFor="profile-picture">Profile Image</label>
+        <div className="data">
+          <p>**You Can Upload Profile Picture Only Once</p>
+          <input type="file" id="profile-img" hidden />
+        </div>
+        <div className="action">
+          {!edit.image ? (
+            <button
+              name="image"
+              onClick={() => {
+                openFile(), handleEditMode;
+              }}
+            >
+              Upload Image
+            </button>
+          ) : (
+            <>
+              <button name="image" onClick={updateImage}>
+                Save
+              </button>
+              <button onClick={handleEditMode} name="image">
+                Cancel
+              </button>
+            </>
+          )}
+        </div>
+      </div> */}
       <h2>Information</h2>
       <div className="gender">
         <label htmlFor="gender">Gender</label>

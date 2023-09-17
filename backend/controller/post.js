@@ -73,7 +73,7 @@ export const createPost = ((req, res) => {
         const image = req.body.image;
         await cloudinary.uploader.upload(image, opts, (err, result) => {
             if (err) {
-                return res.status(413).json({ error: err.message });
+                return res.status(413).json({ message: err.message });
             }
             const q = "INSERT INTO posts (`uid`,`title`,`image`,`description`,`catagory`,`date`,`lastupdate`,`visibility`,`imageid`) VALUES (?)";
             const value = [userInfo.id, req.body.title, result.url, req.body.description, req.body.catagory, req.body.date, req.body.lastupdate, req.body.visibility, result.public_id];

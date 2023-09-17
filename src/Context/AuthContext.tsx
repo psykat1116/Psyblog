@@ -45,6 +45,7 @@ export type editUser = {
   gender: boolean;
   location: boolean;
   birthday: boolean;
+  image: boolean;
   summary: boolean;
   website: boolean;
   instagram: boolean;
